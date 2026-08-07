@@ -1,0 +1,345 @@
+  /* ---------- Welcome hero (c-welcome) — obsidian reference port ---------- */
+  .c-welcome {
+    background-image: url(/images/home/w-bg.jpg);
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+    box-shadow: 0 1px 0 var(--c-black);
+    contain: paint;
+    overflow: hidden;
+    position: relative;
+  }
+  .c-welcome .welcome-bg {
+    inset: 0;
+    position: absolute;
+    z-index: 0;
+  }
+  .c-welcome > :not(.welcome-bg) {
+    position: relative;
+    z-index: 1;
+  }
+  .c-welcome:before {
+    background-color: var(--c-black);
+    clip-path: url(#arch);
+    left: -60%;
+    right: -60%;
+    top: calc(var(--vh, 1vh) * 20);
+    z-index: 1;
+  }
+  .c-welcome:before,
+  .c-welcome:after {
+    bottom: 0;
+    content: "";
+    display: block;
+    position: absolute;
+  }
+  .c-welcome:after {
+    background-image: linear-gradient(
+      180deg,
+      transparent 50%,
+      rgba(var(--c-black-rgb), 0) 50%,
+      rgba(var(--c-black-rgb), 0.04) 56.5%,
+      rgba(var(--c-black-rgb), 0.13) 62.5%,
+      rgba(var(--c-black-rgb), 0.26) 67.5%,
+      rgba(var(--c-black-rgb), 0.42) 72.5%,
+      rgba(var(--c-black-rgb), 0.58) 77.5%,
+      rgba(var(--c-black-rgb), 0.74) 82.5%,
+      rgba(var(--c-black-rgb), 0.87) 87.5%,
+      rgba(var(--c-black-rgb), 0.96) 93.5%,
+      var(--c-black) 100%
+    );
+    left: 0;
+    pointer-events: none;
+    top: calc(var(--vh, 1vh) * 80);
+    width: 100%;
+    z-index: 20;
+  }
+  .c-welcome .-w {
+    align-items: center;
+    padding-bottom: calc(var(--vh, 1vh) * 10);
+    padding-top: calc(var(--vh, 1vh) * 25);
+    position: relative;
+    z-index: 10;
+  }
+  .c-welcome .-w span.title {
+    color: var(--c-white);
+    pointer-events: none;
+    position: relative;
+  }
+  .c-welcome .-w span.line-1 {
+    --top: 1;
+    --left: 2;
+    --width: 5;
+    justify-self: start;
+    margin: -1em;
+    -webkit-mask-image: linear-gradient(180deg, transparent 30%, #000 60%);
+    mask-image: linear-gradient(180deg, transparent 30%, #000 60%);
+    padding: 1em;
+    text-align: left;
+  }
+  .c-welcome .-w span.line-2 {
+    --top: 2;
+    --left: 3;
+    --width: 4;
+    justify-content: flex-end;
+    justify-self: start;
+    transform: translate3d(0, calc(var(--progress) * var(--vh, 1vh) * 10), 0);
+  }
+  .c-welcome .-w span.line-3 {
+    --top: 3;
+    --left: 3;
+    --width: 4;
+    justify-self: start;
+    text-align: left;
+    transform: translate3d(0, calc(var(--progress) * var(--vh, 1vh) * 20), 0);
+    z-index: 20;
+  }
+  .c-welcome .-w .line-1-m,
+  .c-welcome .-w .line-2-m {
+    align-self: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .c-welcome .-w .line-1-m {
+    --top: 1;
+    --left: 4;
+    --width: 2;
+    margin-top: calc(var(--large) * -1);
+  }
+  .c-welcome .-w .line-2-m {
+    --top: 2;
+    --left: 1;
+    --width: 2;
+    margin-top: var(--h5);
+  }
+  .c-welcome .-w .cta {
+    --top: 4;
+    --left: 2;
+    --width: 4;
+    align-self: start;
+    color: var(--c-yellow);
+    margin-top: var(--h1);
+    position: relative;
+    transform: translate3d(0, calc(var(--progress) * var(--vh, 1vh) * 5), 0);
+    z-index: 20;
+  }
+  .c-welcome .-w .cta .-hp {
+    display: block;
+    margin-bottom: var(--h5);
+  }
+  .c-welcome .-w .cta .-hp span {
+    display: block;
+    transition: translate 0.6s var(--f-cubic);
+  }
+  .c-welcome .-w .cta .-hp span:first-child {
+    translate: 4em 0;
+  }
+  .c-welcome .-w .cta .-hp span:nth-child(2) {
+    translate: 6em 0;
+  }
+  .c-welcome .-w .cta .-hp span:nth-child(3) {
+    translate: 5em 0;
+  }
+  .c-welcome .-w .cta .button {
+    width: 100%;
+  }
+  .c-welcome .-w .stone {
+    --top: 3;
+    --height: 3;
+    --left: 1;
+    --width: 6;
+    align-self: start;
+    background-color: var(--c-black);
+    contain: paint;
+    display: grid;
+    -webkit-mask-image: url(/images/home/stone-mask.svg);
+    mask-image: url(/images/home/stone-mask.svg);
+    place-items: center;
+    position: relative;
+    scale: 1.2;
+    transform: translate3d(0, calc(var(--vh, 1vh) * -2), 0)
+      scale(calc(1 - var(--progress) * 0.5));
+    transform-origin: 50% 150%;
+    transition: translate 1.5s var(--f-smooth), scale 1.5s var(--f-smooth);
+    translate: 0 50%;
+    z-index: 10;
+  }
+  .c-welcome .-w .stone:after {
+    background-color: var(--c-black);
+    content: "";
+    display: block;
+    inset: 0;
+    opacity: calc(-0.5 + var(--progress) * 1.5);
+    position: absolute;
+  }
+  .c-welcome .-w .stone > * {
+    display: block;
+    grid-area: 1 / 1;
+    height: 100%;
+    position: relative;
+    width: 100%;
+  }
+  .c-welcome .-w .stone span {
+    background-position: 50%;
+    background-size: contain;
+  }
+  .c-welcome .-w .stone .hover-1 {
+    background-image: url(/images/home/hover-1.webp);
+    -webkit-mask-image: linear-gradient(
+      calc(180deg + var(--spotlight-angle) * 1deg),
+      rgba(0, 0, 0, calc(var(--spotlight-distance) / 1000 + var(--progress))) 50%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      calc(180deg + var(--spotlight-angle) * 1deg),
+      rgba(0, 0, 0, calc(var(--spotlight-distance) / 1000 + var(--progress))) 50%,
+      transparent 100%
+    );
+  }
+  .c-welcome .-w .stone .hover-2 {
+    background-image: url(/images/home/hover-2.webp);
+    -webkit-mask-image: linear-gradient(
+      calc(var(--spotlight-angle) * 1deg),
+      rgba(0, 0, 0, calc(1 - var(--spotlight-distance) / 1500)) 25%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      calc(var(--spotlight-angle) * 1deg),
+      rgba(0, 0, 0, calc(1 - var(--spotlight-distance) / 1500)) 25%,
+      transparent 100%
+    );
+    opacity: calc(1 - var(--progress) * 2);
+  }
+  .c-welcome .-w .items,
+  .c-welcome .-w .places {
+    --top: 2;
+    --height: 3;
+    --width: 2;
+    align-self: end;
+    aspect-ratio: 22 / 30;
+    border-radius: 0.4rem;
+    position: relative;
+    transform: translate3d(0, 50%, 0);
+    transition: transform 1.2s var(--f-smooth);
+    transition-delay: 0.3s;
+    translate: 0 calc(var(--vh, 1vh) * 20 + var(--progress) * 10 * var(--vh, 1vh));
+    z-index: 15;
+  }
+  .c-welcome .-w .items:after,
+  .c-welcome .-w .places:after {
+    font-family: var(--font-t-1);
+    font-size: var(--p);
+    inset: var(--p) 0 0 0;
+    position: absolute;
+    text-align: center;
+  }
+  .c-welcome .-w .places {
+    --left: 1;
+    rotate: calc(-15deg + var(--progress) * 45deg);
+    transform-origin: -150% 50%;
+  }
+  .c-welcome .-w .places:after {
+    content: "P.";
+  }
+  .c-welcome .-w .items {
+    --left: 5;
+    rotate: calc(15deg - var(--progress) * 45deg);
+    transform-origin: 250% 50%;
+  }
+  .c-welcome .-w .items:after {
+    content: "I.";
+  }
+  .c-welcome .welcome-path {
+    aspect-ratio: 1440 / 1080;
+    height: 100%;
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+    transform: translate(calc(var(--x) * 0.1rem));
+    width: 100%;
+    z-index: 30;
+  }
+  html.-loaded.-ready .c-welcome .-w .stone {
+    scale: 1;
+    translate: 0 0;
+  }
+  html.-loaded.-ready .c-welcome .-w .items,
+  html.-loaded.-ready .c-welcome .-w .places {
+    transform: translateZ(0);
+  }
+
+  @media (min-width: 1024px) {
+    .c-welcome {
+      background-size: 100% auto;
+    }
+    .c-welcome:before {
+      left: -20%;
+      right: -20%;
+      top: calc(var(--vh, 1vh) * 60);
+    }
+    .c-welcome .-w {
+      padding-top: calc(var(--vh, 1vh) * 15);
+    }
+    .c-welcome .-w span.line-1 {
+      --left: 4;
+      --width: 9;
+    }
+    .c-welcome .-w span.line-2 {
+      --left: 1;
+      --width: 9;
+      justify-self: end;
+    }
+    .c-welcome .-w span.line-3 {
+      --left: 5;
+      --width: 8;
+    }
+    .c-welcome .-w .line-1-m {
+      --left: 9;
+      --width: 2;
+      margin-top: var(--h2);
+    }
+    .c-welcome .-w .line-2-m {
+      --left: 3;
+      --width: 2;
+      margin-top: var(--h2);
+    }
+    .c-welcome .-w .cta {
+      --left: 6;
+      --width: 2;
+    }
+    .c-welcome .-w .cta .-hp span:first-child {
+      translate: 0 0;
+    }
+    .c-welcome .-w .cta .-hp span:nth-child(2) {
+      translate: 2em 0;
+    }
+    .c-welcome .-w .cta .-hp span:nth-child(3) {
+      translate: 1em 0;
+    }
+    .c-welcome .-w .cta:has(.button:hover) .-hp span {
+      transition: translate 0.6s var(--f-cubic-in);
+    }
+    .c-welcome .-w .cta:has(.button:hover) .-hp span:first-child {
+      translate: 1em 0;
+    }
+    .c-welcome .-w .cta:has(.button:hover) .-hp span:nth-child(2) {
+      transition: translate 0.75s var(--f-cubic-in);
+      translate: 0 0;
+    }
+    .c-welcome .-w .cta:has(.button:hover) .-hp span:nth-child(3) {
+      transition: translate 0.9s var(--f-cubic-in);
+      translate: 2em 0;
+    }
+    .c-welcome .-w .stone {
+      --left: 4;
+      --width: 6;
+    }
+    .c-welcome .-w .items,
+    .c-welcome .-w .places {
+      z-index: 2;
+    }
+    .c-welcome .-w .items {
+      --left: 11;
+    }
+  }
+

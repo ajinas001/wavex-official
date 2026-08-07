@@ -1,22 +1,12 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Inter, JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import PageTransition from "@/components/obsidian/PageTransition";
+import Cursor from "@/components/obsidian/Cursor";
+import Header from "@/components/obsidian/Header";
+import AdmissionForm from "@/components/obsidian/AdmissionForm";
+import Wordmark from "@/components/obsidian/sections/Wordmark";
 import SmoothScroll from "@/lib/SmoothScroll";
-import Cursor from "@/components/Cursor";
-
-// Display face: a high-contrast geometric grotesque standing in for
-// PP Neue Montreal / General Sans, which are licensed foundry fonts.
-const display = Bricolage_Grotesque({
-  subsets: ["latin"],
-  variable: "--font-display",
-  display: "swap",
-});
-
-const body = Inter({
-  subsets: ["latin"],
-  variable: "--font-body",
-  display: "swap",
-});
 
 const mono = JetBrains_Mono({
   subsets: ["latin"],
@@ -26,33 +16,32 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://studio-noir.example"),
+  metadataBase: new URL("https://wavex.studio"),
   title: {
-    default: "Studio Noir — Independent Web Design & Development Studio",
-    template: "%s — Studio Noir",
+    default: "WaveX — A Private Assembly for Makers",
+    template: "%s — WaveX",
   },
   description:
-    "Studio Noir is an independent design and development practice building cinematic, high-performance websites for ambitious brands.",
+    "WaveX is a private assembly for makers — places, objects and admission in equal measure.",
   keywords: [
     "web design studio",
-    "freelance web developer",
-    "creative agency",
+    "creative studio",
     "interactive design",
     "Next.js development",
+    "motion design",
   ],
   openGraph: {
-    title: "Studio Noir — Independent Web Design & Development Studio",
+    title: "WaveX — A Private Assembly for Makers",
     description:
-      "Cinematic, high-performance websites for ambitious brands. Design, motion and code under one roof.",
-    url: "https://studio-noir.example",
-    siteName: "Studio Noir",
+      "Places, objects and admission. Work happens slowly, on purpose.",
+    url: "https://wavex.studio",
+    siteName: "WaveX",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Studio Noir — Independent Web Design & Development Studio",
-    description:
-      "Cinematic, high-performance websites for ambitious brands.",
+    title: "WaveX — A Private Assembly for Makers",
+    description: "Places, objects and admission.",
   },
   robots: {
     index: true,
@@ -66,16 +55,32 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
-      <body className="bg-bg text-ink">
+    <html
+      lang="en"
+      className={mono.variable}
+    >
+      <head>
+        <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
+        <link
+          href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="bg-black font-body text-yellow antialiased">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[999] focus:rounded-full focus:bg-ink focus:px-6 focus:py-3 focus:text-bg"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[999] focus:rounded-full focus:bg-yellow focus:px-6 focus:py-3 focus:text-black focus:font-body"
         >
           Skip to content
         </a>
+        <PageTransition />
         <Cursor />
-        <SmoothScroll>{children}</SmoothScroll>
+        <Header />
+        <main id="main-content">
+          <SmoothScroll>{children}</SmoothScroll>
+        </main>
+        <AdmissionForm />
+        <Wordmark />
       </body>
     </html>
   );

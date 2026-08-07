@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://studio-noir.example/sitemap.xml",
+    sitemap: "https://wavex.studio/sitemap.xml",
   };
 }

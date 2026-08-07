@@ -1,39 +1,49 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import Lenis from "lenis";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
+declare global {
+  interface Window {
+    __lenis?: Lenis | null;
+  }
+}
 
+/**
+ * SmoothScroll — Lenis virtual scrolling. Native scroll is preserved so
+ * framer-motion `useScroll` keeps working; `window.__lenis` is exposed
+ * for programmatic scrolls (header, sequence navs, footer).
+ */
 export default function SmoothScroll({ children }: { children: ReactNode }) {
-  const lenisRef = useRef<Lenis | null>(null);
-
   useEffect(() => {
+    if (
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      window.innerWidth < 768
+    ) {
+      window.__lenis = null;
+      return;
+    }
+
     const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t: number) => 1 - Math.pow(1 - t, 4),
+      duration: 1.15,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       touchMultiplier: 1.4,
     });
 
-    lenisRef.current = lenis;
+    window.__lenis = lenis;
 
-    lenis.on("scroll", ScrollTrigger.update);
-
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
-    gsap.ticker.lagSmoothing(0);
-
-    // expose for anchor links / magnetic elements that need to pause scroll
-    (window as any).__lenis = lenis;
+    let rafId = 0;
+    const raf = (time: number) => {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    };
+    rafId = requestAnimationFrame(raf);
 
     return () => {
+      cancelAnimationFrame(rafId);
       lenis.destroy();
-      gsap.ticker.remove((time) => lenis.raf(time * 1000));
-      (window as any).__lenis = null;
+      window.__lenis = null;
     };
   }, []);
 

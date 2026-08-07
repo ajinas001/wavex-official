@@ -1,0 +1,451 @@
+  /* ---------- Places (c-places) — obsidian reference port ---------- */
+  .c-places {
+    position: relative;
+    background-color: var(--c-black);
+    color: var(--c-yellow);
+    padding-bottom: var(--g-gap);
+  }
+  .c-places .places-path {
+    position: absolute;
+    inset: calc(var(--large) * -1) 0 auto 0;
+    aspect-ratio: 1440 / 1600;
+    width: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .c-places .title {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    text-align: center;
+  }
+  .c-places .title span {
+    position: relative;
+  }
+  .c-places .title span.line-1 {
+    --top: 1;
+  }
+  .c-places .title span.line-2 {
+    --top: 2;
+    margin: -1em;
+    padding: 1em;
+    -webkit-mask-image: linear-gradient(180deg, #000 40%, transparent 65%);
+    mask-image: linear-gradient(180deg, #000 40%, transparent 65%);
+  }
+  .c-places .caption {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+  }
+  .c-places .caption span {
+    display: block;
+  }
+  .c-places .caption span:first-child {
+    translate: -0.25em 0;
+  }
+  .c-places .caption span:nth-child(2) {
+    translate: 2em 0;
+  }
+  .c-places .caption span:nth-child(3) {
+    translate: -0.5em 0;
+  }
+  .c-places .places-story {
+    position: relative;
+    width: 100%;
+  }
+  .c-places .places-story:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: calc(var(--vh, 1vh) * 20);
+    background-image: linear-gradient(to bottom, var(--c-black), transparent);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .c-places .places-story .gl {
+    position: sticky;
+    top: 0;
+    z-index: 0;
+    display: flex;
+    align-items: flex-start;
+    height: 0;
+    pointer-events: none;
+    background-color: transparent;
+  }
+  .c-places .places-story .gl .relief-bg {
+    height: 100vh;
+  }
+  .c-places .places-story .-w {
+    position: relative;
+    z-index: 2;
+    margin-top: var(--h5);
+  }
+
+  /* sticky container — grid item of .-w, carries --progress */
+  .c-places .sticky-container {
+    --left: 1;
+    --top: 2;
+    --width: 6;
+    --height: 1;
+  }
+  .c-places .sticky-container .-gc {
+    position: relative;
+    background-color: transparent;
+    height: 60vh;
+  }
+  .c-places .sticky-container .-gc .i {
+    display: none;
+  }
+  .c-places .sequence-container {
+    --left: 1;
+    --top: 1;
+    --width: 6;
+    --height: 1;
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 0.4rem;
+  }
+  .c-places .sequence-controller {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    transform: translateZ(0);
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    will-change: transform;
+  }
+  .c-places .sequence-controller figure {
+    grid-area: 1 / 1;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-origin: 50% 100%;
+    visibility: hidden;
+  }
+  .c-places .sequence-controller figure img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: translateZ(0) scale(1.5, 1.2);
+    transform-origin: 100% 50%;
+    transition: transform 1.5s var(--f-cubic);
+  }
+  .c-places .sequence-controller figure.-leaving {
+    visibility: visible;
+    z-index: 2;
+  }
+  .c-places .sequence-controller figure.-entering {
+    clip-path: inset(0 0 0 100%) !important;
+    visibility: visible;
+  }
+  .c-places .sequence-controller figure.-entering.-rev {
+    clip-path: inset(0 100% 0 0) !important;
+  }
+  .c-places .sequence-controller figure.-active {
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 0.9s var(--f-cubic);
+    visibility: visible;
+    z-index: 3;
+  }
+  .c-places .sequence-controller figure.-active img {
+    transform: translateZ(0) scale(1);
+  }
+  .c-places .sequesnce-nav {
+    --left: 4;
+    --width: 6;
+    --top: 1;
+    --height: 1;
+    position: relative;
+    z-index: 20;
+    align-self: end;
+    margin-bottom: var(--h5);
+  }
+  .c-places .place-name {
+    display: grid;
+    place-items: center start;
+    margin-left: var(--g-gap);
+    line-height: 0.7;
+    white-space: nowrap;
+    vertical-align: baseline;
+  }
+  .c-places .place-name > * {
+    grid-area: 1 / 1;
+  }
+  .c-places .sequesnce-nav nav {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    align-items: center;
+    gap: var(--g-gap);
+    border-top: 1px solid rgba(var(--c-yellow-rgb), 0.2);
+    padding-top: calc(var(--g-gap) / 2);
+  }
+  .c-places .sequesnce-nav nav button {
+    --direction: 1;
+    position: relative;
+    display: grid;
+    place-items: center;
+    grid-row-start: 1;
+    justify-self: center;
+    padding: 1rem;
+    background-color: var(--c-black);
+    border-radius: 50%;
+    clip-path: circle(calc(50% - 1px) at 50%);
+    overflow: hidden;
+  }
+  .c-places .sequesnce-nav nav button:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    display: block;
+    background-color: var(--c-yellow);
+    border-radius: 50%;
+    scale: 1 0;
+    transform-origin: 50% 100%;
+    transition: scale 1.2s var(--f-cubic-in);
+    z-index: 1;
+  }
+  .c-places .sequesnce-nav nav button svg {
+    grid-area: 1 / 1;
+    position: relative;
+    width: 2.5rem;
+    transform-origin: 50% 400%;
+    transition: rotate 1.2s var(--f-cubic-in);
+    z-index: 1;
+  }
+  .c-places .sequesnce-nav nav button svg:first-child {
+    fill: var(--c-yellow);
+    rotate: calc(0deg * var(--direction));
+  }
+  .c-places .sequesnce-nav nav button svg:nth-child(2) {
+    fill: var(--c-yellow);
+    rotate: calc(-90deg * var(--direction));
+  }
+  .c-places .sequesnce-nav nav button.prev {
+    grid-column-start: 2;
+    grid-column-end: 3;
+  }
+  .c-places .sequesnce-nav nav button.next {
+    grid-column-start: 5;
+    grid-column-end: 6;
+    background-image: linear-gradient(
+      to bottom,
+      transparent 5%,
+      var(--c-yellow) 5%,
+      var(--c-yellow) 10%,
+      transparent 10%
+    );
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: 1px 100%;
+  }
+  .c-places .sequesnce-nav nav button.next:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    display: block;
+    padding: 2px;
+    border-radius: 50%;
+    box-sizing: border-box;
+    background-image: conic-gradient(
+      from 0deg,
+      var(--c-black),
+      var(--c-yellow) calc(var(--slide-progress, 0deg)),
+      transparent 0
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+  .c-places .sequesnce-nav nav .order {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: center;
+    position: relative;
+    grid-column-start: 5;
+    grid-column-end: 7;
+    grid-row-start: 1;
+    padding: 1rem;
+    translate: 0 calc(-100% - var(--h5));
+  }
+  .c-places .sequesnce-nav nav .order:before,
+  .c-places .sequesnce-nav nav .order:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    border: 1px solid rgba(var(--c-yellow-rgb), 0.2);
+    border-radius: 50%;
+    padding: 50% 0;
+  }
+  .c-places .sequesnce-nav nav .order:after {
+    width: 120%;
+    padding: 60% 0;
+    border-color: rgba(var(--c-yellow-rgb), 0.1);
+  }
+  .c-places .sequesnce-nav nav .order > span {
+    display: flex;
+  }
+
+  @media (min-width: 1024px) {
+    .c-places {
+      padding-bottom: 0;
+    }
+    .c-places .places-path {
+      aspect-ratio: 1440 / 1080;
+    }
+    .c-places .caption {
+      height: 0;
+    }
+    .c-places .places-story .-w {
+      margin-top: 0;
+    }
+    .c-places .sticky-container {
+      --width: 12;
+      height: 400vh;
+    }
+    .c-places .sticky-container .-gc {
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: repeat(20, 1fr);
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      row-gap: var(--g-gap);
+    }
+    .c-places .sticky-container .-gc .i {
+      display: block;
+      border-radius: 0.4rem;
+      will-change: transform;
+    }
+    .c-places .sticky-container .-gc .i-1 {
+      --top: 3; --height: 4; --left: 8; --width: 2;
+      transform: translate(
+        calc(min(var(--progress) * 2, 1) * var(--vw, 1vw) * 30),
+        calc(min(var(--progress) * 2, 1) * var(--vh, 1vh) * -30)
+      );
+    }
+    .c-places .sticky-container .-gc .i-2 {
+      --top: 5; --height: 6; --left: 10; --width: 3;
+      transform: translate(
+        calc(min(var(--progress) * 2, 1) * var(--vw, 1vw) * 30),
+        calc(min(var(--progress) * 2, 1) * var(--vh, 1vh) * -10)
+      );
+    }
+    .c-places .sticky-container .-gc .i-3 {
+      --top: 11; --height: 8; --left: 10; --width: 3;
+      transform: translate(
+        calc(min(var(--progress) * 2, 1) * var(--vw, 1vw) * 35),
+        calc(min(var(--progress) * 2, 1) * var(--vh, 1vh) * 10)
+      );
+    }
+    .c-places .sticky-container .-gc .i-4 {
+      --top: 15; --height: 5; --left: 4; --width: 3;
+      transform: translate(
+        calc(min(var(--progress) * 2, 1) * var(--vw, 1vw) * -20),
+        calc(min(var(--progress) * 2, 1) * var(--vh, 1vh) * 30)
+      );
+    }
+    .c-places .sticky-container .-gc .i-5 {
+      --top: 13; --height: 5; --left: 1; --width: 3;
+      transform: translate(
+        calc(min(var(--progress) * 2, 1) * var(--vw, 1vw) * -30),
+        calc(min(var(--progress) * 2, 1) * var(--vh, 1vh) * 10)
+      );
+    }
+    .c-places .sticky-container .-gc .i-6 {
+      --top: 5; --height: 8; --left: 1; --width: 3;
+      transform: translate(
+        calc(min(var(--progress) * 2, 1) * var(--vw, 1vw) * -35),
+        calc(min(var(--progress) * 2, 1) * var(--vh, 1vh) * -30)
+      );
+    }
+    .c-places .sequence-container {
+      --width: 12;
+      --height: 20;
+      border-radius: initial;
+      --sc-offset-y: calc(30% - var(--g-gap) / 1.5);
+      --sc-offset-x: calc(25% + var(--g-gap) / 4);
+      --sc-calc-x: calc(var(--sc-offset-x) * (1 - min(var(--progress) * 2, 1)));
+      --sc-calc-y: calc(
+        var(--sc-offset-y) * (1 - min(var(--progress) * 2, 1)) + var(--g-gap)
+      );
+      clip-path: inset(
+        var(--sc-calc-y) var(--sc-calc-x) var(--sc-calc-y) var(--sc-calc-x) round 0.4rem
+      );
+    }
+    .c-places .sequence-controller {
+      --sctl-offset-x: calc(41.66667% + var(--g-gap) / 2.5);
+      --sctl-radius: calc(var(--col) + var(--g-gap) / 2);
+      --sctl-calc-y: calc(50% * var(--progress-ending) + var(--g-gap));
+      --sctl-calc-x: calc(var(--sctl-offset-x) * var(--progress-ending));
+      --sctl-calc-r: calc(var(--sctl-radius) * var(--progress-ending) + 0.4rem);
+      clip-path: inset(
+        var(--sctl-calc-y) var(--sctl-calc-x) var(--g-gap) var(--sctl-calc-x)
+        round var(--sctl-calc-r) var(--sctl-calc-r) 0.4rem 0.4rem
+      );
+      scale: calc(0.75 + min(var(--progress) * 2, 1) * 0.25);
+    }
+    .c-places .sequence-controller figure {
+      scale: calc(1 - var(--progress-ending) / 2);
+    }
+    .c-places .sequesnce-nav {
+      --left: 4;
+      --height: 20;
+      margin-bottom: 0;
+      transform: translate3d(
+        0,
+        calc(
+          var(--vh, 1vh) * -35 -
+            (var(--vh, 1vh) * -35 + var(--h0)) * var(--progress)
+        ),
+        0
+      );
+    }
+    .c-places .sequesnce-nav nav button.prev {
+      grid-column-start: 3;
+      grid-column-end: 4;
+    }
+    .c-places .sequesnce-nav nav button.next {
+      grid-column-start: 4;
+      grid-column-end: 5;
+    }
+    .c-places .sequesnce-nav nav button.next:after {
+      opacity: 1;
+      transition: opacity 0.6s var(--f-cubic);
+    }
+    .c-places .sequesnce-nav nav button:hover:before {
+      scale: 1 1;
+      transition: scale 0.9s var(--f-cubic);
+    }
+    .c-places .sequesnce-nav nav button:hover:after {
+      opacity: 0;
+    }
+    .c-places .sequesnce-nav nav button:hover svg {
+      transition: rotate 0.9s var(--f-cubic);
+    }
+    .c-places .sequesnce-nav nav button:hover svg:first-child {
+      rotate: calc(90deg * var(--direction));
+    }
+    .c-places .sequesnce-nav nav button:hover svg:nth-child(2) {
+      rotate: calc(0deg * var(--direction));
+    }
+    .c-places .sequesnce-nav nav .order {
+      grid-column-start: 6;
+      grid-column-end: 7;
+      translate: 0 0;
+    }
+  }
+

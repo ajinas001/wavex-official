@@ -1,0 +1,204 @@
+  /* ---------- PlacesAfter (c-places-after) — obsidian reference port ---------- */
+  .c-places-after {
+    background-color: var(--c-yellow);
+    color: var(--c-black);
+    display: grid;
+    place-items: center;
+    position: relative;
+    z-index: 30;
+  }
+  .c-places-after .figure-map {
+    grid-area: 1 / 1;
+    align-self: start;
+    justify-self: stretch;
+    position: relative;
+    overflow: hidden;
+  }
+  .c-places-after .figure-map:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 24vw;
+    height: 12vw;
+    background-color: var(--c-black);
+    -webkit-mask: url(/images/star-mask.svg) no-repeat bottom / 100% auto;
+    mask: url(/images/star-mask.svg) no-repeat bottom / 100% auto;
+    z-index: 1;
+  }
+  .c-places-after .figure-map:after {
+    content: "";
+    display: block;
+    position: absolute;
+    inset: 0;
+    background-image: url(/images/home/ship.webp),
+      linear-gradient(to right, var(--c-yellow), rgba(var(--c-yellow-rgb), 0) 80%),
+      linear-gradient(to left, var(--c-yellow), rgba(var(--c-yellow-rgb), 0) 40%),
+      linear-gradient(to top, var(--c-yellow), rgba(var(--c-yellow-rgb), 0) 40%);
+    background-position: 100% bottom, 50%, 50%, 50%;
+    background-repeat: no-repeat;
+    background-size: 5rem auto, 100%, 100%, 100%;
+  }
+  .c-places-after .figure-map figure {
+    position: relative;
+    backface-visibility: hidden;
+    will-change: transform;
+    transform: translate3d(
+      0,
+      calc(var(--vh, 1vh) * -20 + var(--vh, 1vh) * 40 * var(--progress)),
+      0
+    );
+  }
+  .c-places-after .figure-map figure img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .c-places-after .places-after-path {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+  }
+  .c-places-after .-w {
+    grid-area: 1 / 1;
+    justify-self: stretch;
+    padding-top: var(--h1);
+    padding-bottom: var(--large);
+  }
+  .c-places-after .-w .title {
+    --left: 1;
+    --width: 4;
+    justify-self: left;
+  }
+  .c-places-after .-w .title span {
+    display: block;
+  }
+  .c-places-after .-w .title span:first-child {
+    translate: 0.5em 0;
+  }
+  .c-places-after .-w .title span:nth-child(2) {
+    translate: 1.5em 0;
+  }
+  .c-places-after .-w .subtitle {
+    --top: 2;
+    --left: 2;
+    --width: 3;
+    margin-top: var(--large);
+  }
+  .c-places-after .-w .caption {
+    --top: 3;
+    --left: 3;
+    --width: 4;
+    margin-top: var(--h2);
+  }
+  .c-places-after .-w .caption span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--c-brown);
+    font-family: var(--font-display);
+    line-height: 0;
+    margin-left: var(--m);
+    margin-right: var(--m);
+    position: relative;
+    z-index: 0;
+  }
+  .c-places-after .-w .caption span:before {
+    content: "";
+    display: block;
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 300%;
+    padding-bottom: 300%;
+    border: 1px solid var(--c-white);
+    border-radius: 50%;
+    z-index: -1;
+  }
+  .c-places-after .-w .cta-label {
+    --top: 4;
+    --left: 2;
+    --width: 4;
+    display: block;
+    justify-self: start;
+    margin-top: var(--h3);
+    margin-bottom: var(--h5);
+  }
+  .c-places-after .-w .cta-label span {
+    display: block;
+    transition: translate 0.6s var(--f-cubic);
+  }
+  .c-places-after .-w .cta-label span:first-child {
+    translate: 0 0;
+  }
+  .c-places-after .-w .cta-label span:nth-child(2) {
+    translate: 2em 0;
+  }
+  .c-places-after .-w .button {
+    --top: 5;
+    --left: 2;
+    --width: 4;
+  }
+  .c-places-after .stone-2 {
+    position: absolute;
+    right: 5%;
+    top: 0;
+    width: 25%;
+    pointer-events: none;
+    transform: translate3d(0, calc(var(--vh, 1vh) * -20 * var(--progress)), 0)
+      rotate(calc(var(--progress) * 60deg));
+  }
+  .c-places-after .stone-2 img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  @media (min-width: 1024px) {
+    .c-places-after .figure-map:before {
+      width: 6vw;
+      height: 3vw;
+    }
+    .c-places-after .figure-map:after {
+      background-position: 20% bottom, 50%, 50%, 50%;
+    }
+    .c-places-after .-w .title {
+      --left: 3;
+      --width: 5;
+    }
+    .c-places-after .-w .subtitle {
+      --left: 3;
+      --width: 4;
+    }
+    .c-places-after .-w .caption {
+      --left: 4;
+      --width: 3;
+    }
+    .c-places-after .-w .cta-label {
+      --left: 8;
+      --width: 2;
+      margin-top: 0;
+    }
+    .c-places-after .-w .button {
+      --left: 9;
+      --width: 2;
+    }
+    .c-places-after .-w:has(.button:hover) .cta-label span:first-child {
+      transition: translate 0.6s var(--f-cubic-in);
+      translate: 2em 0;
+    }
+    .c-places-after .-w:has(.button:hover) .cta-label span:nth-child(2) {
+      transition: translate 0.75s var(--f-cubic-in);
+      translate: 1em 0;
+    }
+    .c-places-after .stone-2 {
+      right: 10%;
+      width: 12%;
+    }
+  }
+

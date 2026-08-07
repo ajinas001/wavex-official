@@ -1,59 +1,25 @@
-"use client";
-
-import { useState } from "react";
-import Loader from "@/components/Loader";
-import Header from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import Marquee from "@/components/Marquee";
-import About from "@/components/About";
-
-import Services from "@/components/Services";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
-import CinematicHero from "@/components/Hero";
-import Navbar from "@/components/Navbar";
-import HeroScene from "@/components/HeroScene";
-import AboutWaveX from "@/components/Aboutsection";
-import  { DimensionalWarpShowcase } from "@/components/Work";
+import Welcome from "@/components/obsidian/sections/Welcome";
+import PlacesBento from "@/components/obsidian/sections/PlacesBento";
+import PlacesAfter from "@/components/obsidian/sections/PlacesAfter";
+import Objects from "@/components/obsidian/sections/Objects";
+import Connection from "@/components/obsidian/sections/Connection";
+import Updates from "@/components/obsidian/sections/Updates";
+import People from "@/components/obsidian/sections/People";
+import Admission from "@/components/obsidian/sections/Admission";
+import Footer from "@/components/obsidian/sections/Footer";
 
 export default function Home() {
-  const [loading, setLoading] = useState(true);
-
   return (
     <>
-      {/* <Loader onComplete={() => setLoading(false)} /> */}
-
-      {/* {!loading && <Header />} */}
-
-      <main id="main-content">
-        <Navbar/>
-        <Hero/>
-        <Marquee />
-        <About />
-        <DimensionalWarpShowcase/> 
-        <Services />
-        <AboutWaveX/>
-        <Contact />
-      </main>
-
+      <Welcome />
+      <PlacesBento />
+      <PlacesAfter />
+      <Objects />
+      <Connection />
+      <Updates />
+      <People />
+      <Admission />
       <Footer />
-
-
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "ProfessionalService",
-            name: "Studio Noir",
-            description:
-              "Independent web design and development studio building cinematic, high-performance websites.",
-            url: "https://studio-noir.example",
-            email: "hello@studionoir.co",
-          }),
-        }}
-      />
     </>
   );
 }

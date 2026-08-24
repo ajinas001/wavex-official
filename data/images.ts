@@ -35,15 +35,15 @@ export const IMG = {
   /** Cover title card graphic */
   placesTitle: "/hero.webp",
   /** Place 1: Silent Room */
-  place1: "/images/home/figure-map.webp",
+  place1: "/images/sample.png",
   /** Place 2: The Underscore */
-  place2: "/images/offices/6.webp",
+  place2: "/images/booker.png",
   /** Place 3: Halcyon Hall */
-  place3: "/images/offices/7.webp",
+  place3: "/images/vexa.png",
   /** Place 4: North Window */
-  place4: "/images/home/stone-wall.webp",
+  place4: "/images/farasha.png",
   /** Place 5: Foundry */
-  place5: "/images/home/w-bg.jpg",
+  place5: "/images/alsarh.png",
   /** Place 6: Slow House */
   place6: "/images/home/stone.webp",
   /** Place 7: The Long Gallery */

@@ -1,11 +1,13 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useState } from "react";
 import {
   motion,
   useTransform,
   useMotionValueEvent,
   useSpring,
+  useReducedMotion,
+  AnimatePresence,
   type MotionValue,
 } from "framer-motion";
 import { IMG } from "@/data/images";
@@ -13,7 +15,14 @@ import { services, type Service } from "@/data/services";
 import { useSectionProgress } from "@/hooks/useSectionProgress";
 import { scrollToY } from "@/lib/scroll";
 
-/* Four distinct, visible object images (eager-loaded, see below). */
+/* -------------------------------------------------------------------------- */
+/*  PALETTE — literal obsidian: near-black stone, warm cream ink, gilt edge   */
+/* -------------------------------------------------------------------------- */
+const INK = "#f2e9d8";
+const INK_DIM = "rgba(242,233,216,0.55)";
+const BG = "#0b0907";
+const GOLD = "#c9a463";
+
 const CARD_IMG: Record<string, string> = {
   "01": IMG.welcomeBg,
   "02": IMG.object2,
@@ -21,390 +30,342 @@ const CARD_IMG: Record<string, string> = {
   "04": IMG.object4,
 };
 
-/* Per-card grid slots (2x2, % offsets from viewport centre) */
-const SLOT_X = ["-28%", "28%", "-28%", "28%"];
-const SLOT_Y = ["-26%", "-26%", "26%", "26%"];
+const ROMAN = ["I", "II", "III", "IV"];
+const LUX_GLIDE = [0.65, 0, 0.35, 1] as const;
 
-/* Front-card windows: active card swaps at 0.55 / 0.66 / 0.77 / 0.88 */
-const PTS = [0, 0.4, 0.55, 0.66, 0.77, 0.88, 0.99, 1];
-
-function scaleFor(i: number): number[] {
-  const out = [0.5, 0.5, 0.45, 0.45, 0.45, 0.45, 0.5, 0.5];
-  if (i === 0) out[2] = 1.15;
-  if (i >= 1) out[3] = 1.15;
-  if (i >= 2) out[4] = 1.15;
-  if (i >= 3) out[5] = 1.15;
-  return out;
+/* -------------------------------------------------------------------------- */
+/*  GRAIN — cheap SVG noise for material texture on a flat black field        */
+/* -------------------------------------------------------------------------- */
+function Grain() {
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-40 opacity-[0.06] mix-blend-overlay">
+      <svg width="100%" height="100%">
+        <filter id="grain-type">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#grain-type)" />
+      </svg>
+    </div>
+  );
 }
 
-function DeckCard({
+/* -------------------------------------------------------------------------- */
+/*  REVEAL CHAR — the signature move. Each glyph is cut from the object's own */
+/*  photograph via background-clip:text with background-attachment:fixed, so */
+/*  every letter shows the correct slice of one continuous image regardless  */
+/*  of where it sits on screen — the word reads as carved from the material, */
+/*  not printed over it. Reveal is scroll-scrubbed per glyph: opacity, lift,  */
+/*  blur-to-focus, a slight 3D tilt settling flat, and tracking contracting  */
+/*  in — all driven by exact scroll position, not a timer.                   */
+/* -------------------------------------------------------------------------- */
+function RevealChar({
+  ch,
   index,
-  active,
-  progress,
-  service,
+  reveal,
+  imgUrl,
 }: {
+  ch: string;
   index: number;
-  active: number;
-  progress: MotionValue<number>;
-  service: Service;
+  reveal: MotionValue<number>;
+  imgUrl: string;
 }) {
-  const x = useTransform(progress, PTS, [
-    SLOT_X[index],
-    "0%",
-    "0%",
-    "0%",
-    "0%",
-    "0%",
-    SLOT_X[index] === "-28%" ? "-45%" : "45%",
-    SLOT_X[index] === "-28%" ? "-45%" : "45%",
-  ]);
-  const y = useTransform(progress, PTS, [
-    SLOT_Y[index],
-    "0%",
-    "0%",
-    "0%",
-    "0%",
-    "0%",
-    SLOT_Y[index] === "-26%" ? "-40%" : "40%",
-    SLOT_Y[index] === "-26%" ? "-40%" : "40%",
-  ]);
-  const scale = useTransform(progress, PTS, scaleFor(index));
-  const opacity = useTransform(progress, PTS, [
-    1, 1, index === 0 ? 1 : 0.75, 0.9, 0.9, 0.85, 0.85, 0,
-  ]);
-  const rotate = useTransform(progress, [0, 0.4, 1], [index % 2 ? 4 : -4, 0, 0]);
+  const opacity = useTransform(reveal, [index - 0.55, index], [0, 1]);
+  const y = useTransform(reveal, [index - 0.55, index], [28, 0]);
+  const blurPx = useTransform(reveal, [index - 0.55, index], [8, 0]);
+  // Blur composes with a fixed grayscale/contrast/brightness pass so the
+  // photo reads as toned material rather than a raw snapshot behind glass.
+  const filter = useTransform(blurPx, (b) => `blur(${b}px) grayscale(0.35) contrast(1.15) brightness(0.92)`);
+  const rotateX = useTransform(reveal, [index - 0.55, index], [-24, 0]);
+  const tracking = useTransform(reveal, [index - 0.55, index], [7, 0]);
+  const letterSpacing = useTransform(tracking, (t) => `${t}px`);
+
+  if (ch === " ") return <span className="inline-block w-[0.28em]" />;
 
   return (
-    <motion.div
-      className="absolute inset-0 grid place-items-center"
-      style={{ zIndex: active === index ? 20 : 2 }}
+    <motion.span
+      style={{
+        opacity,
+        y,
+        filter,
+        rotateX,
+        letterSpacing,
+        display: "inline-block",
+        backgroundImage: `linear-gradient(rgba(11,9,7,0.35), rgba(11,9,7,0.35)), url(${imgUrl})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+        WebkitBackgroundClip: "text",
+        backgroundClip: "text",
+        color: "transparent",
+        WebkitTextFillColor: "transparent",
+        WebkitTextStroke: "0.4px rgba(201,164,99,0.35)",
+      }}
     >
-      <motion.div
-        style={{ x, y, scale, opacity, rotate }}
-        className="relative w-[36vw] max-w-[160px] sm:max-w-none md:w-[20vw] md:min-w-[220px] md:max-w-[240px]"
-      >
-        <div className="aspect-[1840/2480] w-full overflow-hidden rounded-[0.4rem] bg-black shadow-soft">
-          <img
-            src={CARD_IMG[service.index]}
-            alt={service.title}
-            className="h-full w-full object-cover"
-            loading="eager"
-            decoding="async"
-          />
-          <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-black/70 via-black/30 to-transparent px-4 pb-3 pt-10">
-            <span className="-mm -up text-yellow">{service.index}</span>
-            <span className="text-right text-[10px] font-medium uppercase leading-tight tracking-[0.2em] text-yellow/90">
-              {service.title}
-            </span>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
+      {ch}
+    </motion.span>
   );
 }
 
-/** Sticky 400vh — cards gather from a 2x2 grid, zoom into the centre,
- *  swap the active card mid-scroll, then zoom back out. */
-function ObjectsGrid() {
-  const { ref, progress } = useSectionProgress({
-    offset: ["start start", "end end"],
-  });
-  const [active, setActive] = useState(0);
-
-  useMotionValueEvent(progress, "change", (v) => {
-    if (v < 0.55) setActive(0);
-    else if (v < 0.66) setActive(1);
-    else if (v < 0.77) setActive(2);
-    else setActive(3);
-  });
-
-  const titleX = useTransform(progress, [0, 0.35], ["0%", "-14vw"]);
-  const titleY = useTransform(progress, [0, 0.35], ["0%", "-6vh"]);
-  const title2X = useTransform(progress, [0, 0.35], ["0%", "14vw"]);
-  const titleOpacity = useTransform(progress, [0, 0.3], [1, 0]);
-  const captionOpacity = useTransform(progress, [0.4, 0.55, 0.9], [0, 1, 0]);
-
-  const service = services[active];
-
+/* -------------------------------------------------------------------------- */
+/*  KINETIC HEADLINE                                                          */
+/* -------------------------------------------------------------------------- */
+function KineticHeadline({ service, reveal }: { service: Service; reveal: MotionValue<number> }) {
+  const words = service.title.split(" ");
+  let cursor = 0;
+  const imgUrl = CARD_IMG[service.index];
   return (
-    <section ref={ref} id="objects" data-header-color="dark" className="relative h-[400vh] bg-yellow text-brown">
-      <div className="sticky top-0 h-screen overflow-hidden">
-        <div className="absolute inset-0 -w">
-          {/* Micro */}
-          <div className="flex items-baseline justify-between" style={{ gridColumn: "1 / -1" }}>
-            <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-brown/50">
-              Objects / 01–04
-            </span>
-            <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-brown/50">
-              scroll
-            </span>
-          </div>
-
-          {/* Title movers */}
-          <motion.div
-            className="overflow-hidden"
-            style={{ gridColumn: "1 / -1", gridRow: 2, x: titleX, y: titleY, opacity: titleOpacity }}
-          >
-            <h2 className="font-display text-[10vw] font-light leading-[0.85]">
-              Our Four
-            </h2>
-          </motion.div>
-          <motion.div
-            className="overflow-hidden"
-            style={{ gridColumn: "4 / -1", gridRow: 3, x: title2X, opacity: titleOpacity }}
-          >
-            <h2 className="justify-self-end font-display text-[10vw] font-light italic leading-[0.85] text-brown/60">
-              Modes
-            </h2>
-          </motion.div>
-        </div>
-
-        {/* Card deck — converge, zoom, swap, zoom out */}
-        <div className="pointer-events-none absolute inset-0">
-          {services.map((s, i) => (
-            <DeckCard key={s.index} index={i} active={active} progress={progress} service={s} />
-          ))}
-
-          {/* Active caption */}
-          <motion.div
-            className="absolute left-1/2 top-[74%] z-30 w-full -translate-x-1/2 px-6 text-center"
-            style={{ opacity: captionOpacity }}
-          >
-            <p className="font-display text-2xl font-light md:text-4xl">{service.title}</p>
-            <p className="mx-auto mt-2 hidden max-w-md text-sm leading-relaxed text-brown/70 md:block">
-              {service.description}
-            </p>
-          </motion.div>
-        </div>
-      </div>
-    </section>
+    <h2
+      className="font-serif text-[11vw] font-light leading-[0.92] tracking-tight md:text-[7.5vw]"
+      style={{ perspective: 1400 }}
+    >
+      {words.map((word, wi) => {
+        const chars = word.split("");
+        const startIndex = cursor;
+        cursor += word.length + 1;
+        return (
+          <span key={`${service.index}-w${wi}`} className="mr-[0.22em] inline-block" style={{ transformStyle: "preserve-3d" }}>
+            {chars.map((ch, ci) => (
+              <RevealChar key={`${service.index}-${wi}-${ci}`} ch={ch} index={startIndex + ci} reveal={reveal} imgUrl={imgUrl} />
+            ))}
+          </span>
+        );
+      })}
+    </h2>
   );
 }
 
-/** Sticky 500vh — butterfly path draws, active card + texts at left,
- *  prev/next swap the card, stone + ending at the end. */
-function ObjectsPath() {
-  const { ref, progress } = useSectionProgress({
-    offset: ["start start", "end end"],
-  });
-  const pathRef = useRef<SVGPathElement>(null);
-  const [len, setLen] = useState(0);
-  const [active, setActive] = useState(0);
-
-  useMotionValueEvent(progress, "change", (v) => {
-    setActive(Math.min(3, Math.max(0, Math.floor(v * 4))));
-  });
-
-  useEffect(() => {
-    const el = pathRef.current;
-    if (el) setLen(el.getTotalLength());
-  }, []);
-
-  const service = services[active];
-
-  const dash = useTransform(progress, [0.1, 1], [len, 0]);
-  const figureScale = useTransform(progress, [0, 0.15], [0.88, 1]);
-  const titleOpacity = useTransform(progress, [0.9, 1], [1, 0.2]);
-  const stoneOpacity = useTransform(progress, [0.78, 0.92], [0, 1]);
-  const stoneScale = useTransform(progress, [0.78, 0.95], [0.6, 1]);
-  const endingOpacity = useTransform(progress, [0.85, 0.97], [0, 1]);
-  const endingY = useTransform(progress, [0.85, 0.97], ["40%", "0%"]);
-
-  const ring = useSpring(useTransform(progress, [0, 1], [0, 360]), {
-    stiffness: 90,
-    damping: 22,
-  });
-  const ringOffset = useTransform(
-    ring,
-    [0, 360],
-    [2 * Math.PI * 22, 0]
+/* -------------------------------------------------------------------------- */
+/*  MARQUEE                                                                    */
+/* -------------------------------------------------------------------------- */
+function ModeMarquee() {
+  const line = services.map((s) => s.title).join("   \u2014   ");
+  return (
+    <div className="relative w-full overflow-hidden border-t" style={{ borderColor: "rgba(242,233,216,0.12)" }}>
+      <div
+        className="motion-safe:animate-[marquee_38s_linear_infinite] flex w-max whitespace-nowrap py-3 font-mono text-[10px] uppercase tracking-[0.35em]"
+        style={{ color: INK_DIM }}
+      >
+        <span className="pr-8">{line}</span>
+        <span className="pr-8">{line}</span>
+      </div>
+    </div>
   );
+}
 
-  const scrollBy = (dir: 1 | -1) => {
-    scrollToY(window.scrollY + dir * window.innerHeight);
+/* -------------------------------------------------------------------------- */
+/*  ROOT: ONE STICKY TYPOGRAPHIC SEQUENCE, FOUR CHAPTERS                      */
+/* -------------------------------------------------------------------------- */
+export default function Objects() {
+  const reduceMotion = useReducedMotion();
+  const { ref, progress } = useSectionProgress({ offset: ["start start", "end end"] });
+  const smoothProgress = useSpring(progress, { stiffness: 70, damping: 24, mass: 0.6 });
+
+  const [active, setActive] = useState(0);
+  const chapters = services.length;
+  const span = 1 / chapters;
+
+  useMotionValueEvent(smoothProgress, "change", (v) => {
+    const idx = Math.min(chapters - 1, Math.max(0, Math.floor(v / span)));
+    setActive(idx);
+  });
+
+  const revealCount = useTransform(smoothProgress, (v) => {
+    const idx = Math.min(chapters - 1, Math.max(0, Math.floor(v / span)));
+    const localT = (v - idx * span) / span;
+    const revealT = reduceMotion ? 1 : Math.min(1, Math.max(0, (localT - 0.02) / 0.42));
+    return revealT * services[idx].title.length;
+  });
+
+  const underlineScale = useTransform(smoothProgress, (v) => {
+    const idx = Math.min(chapters - 1, Math.max(0, Math.floor(v / span)));
+    const localT = (v - idx * span) / span;
+    return reduceMotion ? 1 : Math.min(1, Math.max(0, (localT - 0.05) / 0.4));
+  });
+
+  const descOpacity = useTransform(smoothProgress, (v) => {
+    const idx = Math.min(chapters - 1, Math.max(0, Math.floor(v / span)));
+    const localT = (v - idx * span) / span;
+    if (localT < 0.5) return 0;
+    if (localT < 0.6) return (localT - 0.5) / 0.1;
+    if (localT < 0.85) return 1;
+    if (localT < 0.95) return 1 - (localT - 0.85) / 0.1;
+    return 0;
+  });
+  const descY = useTransform(descOpacity, [0, 1], [14, 0]);
+
+  const railY = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
+  const finaleOpacity = useTransform(smoothProgress, [0.94, 1], [0, 1]);
+  const finaleY = useTransform(smoothProgress, [0.94, 1], [24, 0]);
+
+  const jumpToChapter = (i: number) => {
+    const el = ref.current as unknown as HTMLElement | null;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const top = rect.top + window.scrollY;
+    const target = top + i * span * el.offsetHeight + 40;
+    scrollToY(target);
   };
 
+  const service = services[active];
+
   return (
-    <section ref={ref} data-header-color="dark" className="relative h-[500vh] bg-yellow text-brown">
-      <div className="sticky top-0 h-screen overflow-hidden">
-        <div className="relative h-full w-full">
-          {/* Butterfly path */}
-          <svg
-            viewBox="0 0 1200 700"
-            className="absolute inset-0 h-full w-full"
-            preserveAspectRatio="xMidYMid meet"
-            aria-hidden="true"
-          >
-            <motion.path
-              ref={pathRef}
-              d="M -40 660 C 240 520, 340 210, 580 300 S 900 680, 1240 380"
-              fill="none"
-              stroke="rgba(123,81,54,0.4)"
-              strokeWidth="1.5"
-              strokeDasharray={len}
-              strokeDashoffset={dash}
-              strokeLinecap="round"
+    <section
+      ref={ref}
+      id="objects"
+      data-header-color="light"
+      className="relative h-[560vh] antialiased"
+      style={{ backgroundColor: BG }}
+    >
+      <div className="sticky top-0 flex h-screen flex-col overflow-hidden p-6 md:p-12">
+        <Grain />
+        <div
+          className="pointer-events-none absolute inset-0 z-0"
+          style={{ background: `radial-gradient(60vw 60vh at 50% 50%, rgba(201,164,99,0.06), transparent 70%)` }}
+        />
+
+        {/* Top HUD */}
+        <div
+          className="z-20 flex items-baseline justify-between border-b pb-4 font-mono text-[9px] uppercase tracking-[0.3em]"
+          style={{ borderColor: "rgba(242,233,216,0.15)", color: INK_DIM }}
+        >
+          <span>Origin Objects</span>
+          <span>Scroll to read</span>
+        </div>
+
+        {/* Vertical progress rail with clickable chapter ticks */}
+        <div className="pointer-events-auto absolute right-6 top-1/2 z-30 hidden h-[38vh] -translate-y-1/2 md:block md:right-10">
+          <div className="relative h-full w-px" style={{ backgroundColor: "rgba(242,233,216,0.15)" }}>
+            <motion.div
+              className="absolute left-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full"
+              style={{ top: railY, backgroundColor: GOLD, boxShadow: `0 0 12px ${GOLD}` }}
             />
-          </svg>
-
-          {/* Left: active card */}
-          <div className="absolute left-margin top-1/2 -translate-y-1/2 w-[36vw] max-w-[160px] sm:max-w-none md:w-[20vw] md:min-w-[220px] md:max-w-[240px]">
-            <motion.div style={{ scale: figureScale }} className="w-full">
-              <div className="figure relative aspect-[1840/2480] overflow-hidden rounded-[0.4rem] shadow-soft">
-                <motion.img
-                  key={service.index}
-                  src={CARD_IMG[service.index]}
-                  alt={service.title}
-                  className="h-full w-full object-cover"
-                  loading="eager"
-                  decoding="async"
-                  initial={{ scale: 1.25 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 1.5, ease: [0.69, 0, 0, 1] }}
+            {services.map((s, i) => (
+              <button
+                key={s.index}
+                type="button"
+                onClick={() => jumpToChapter(i)}
+                aria-label={`Jump to ${s.title}`}
+                className="group absolute left-1/2 flex -translate-x-1/2 items-center"
+                style={{ top: `${(i / chapters) * 100}%` }}
+              >
+                <span
+                  className="block h-1.5 w-1.5 rounded-full transition-transform duration-300 group-hover:scale-150"
+                  style={{ backgroundColor: active === i ? GOLD : "rgba(242,233,216,0.35)" }}
                 />
-                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-black/70 via-black/30 to-transparent px-4 pb-3 pt-10">
-                  <span className="-mm -up text-yellow">{service.index}</span>
-                  <span className="text-right text-[10px] font-medium uppercase leading-tight tracking-[0.2em] text-yellow/90">
-                    {service.title}
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Right: title + texts + button */}
-          <div className="absolute left-margin right-margin top-1/2 -translate-y-1/2 rounded-[0.4rem] bg-yellow/85 p-4 backdrop-blur-sm md:left-auto md:w-[min(40vw,28rem)] md:bg-transparent md:p-0 md:backdrop-blur-none">
-            <motion.h2 className="font-display text-[6vw] font-light leading-[0.9] md:text-[4vw]" style={{ opacity: titleOpacity }}>
-              {service.title.split(" ").map((w, i) => (
-                <span key={`${service.index}-${i}`} className="mr-[0.2em] inline-block overflow-hidden">
-                  <motion.span
-                    className="inline-block"
-                    key={`${service.index}-${i}`}
-                    initial={{ y: "110%", rotate: 4 }}
-                    animate={{ y: 0, rotate: 0 }}
-                    transition={{ duration: 0.9, delay: i * 0.08, ease: [0.69, 0, 0, 1] }}
-                  >
-                    {w}
-                  </motion.span>
+                <span
+                  className="pointer-events-none absolute right-4 whitespace-nowrap font-mono text-[9px] uppercase tracking-[0.25em] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  style={{ color: INK_DIM }}
+                >
+                  {s.index}
                 </span>
-              ))}
-            </motion.h2>
+              </button>
+            ))}
+          </div>
+        </div>
 
-            <div className="mt-8 space-y-3">
-              {[service.description, "Every mode is a position — a way of standing in the work.", "Chosen deliberately, held lightly, dropped when it stops serving."].map(
-                (t, i) => (
-                  <motion.p
-                    key={`${service.index}-t${i}`}
-                    className="max-w-md text-sm leading-relaxed text-brown/70"
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2 + i * 0.12, ease: [0.69, 0, 0, 1] }}
-                  >
-                    {t}
-                  </motion.p>
-                )
-              )}
-            </div>
+        {/* Center: the kinetic, image-filled headline */}
+        <div className="relative z-20 flex flex-1 flex-col items-center justify-center text-center">
+          <span className="mb-5 font-mono text-[10px] uppercase tracking-[0.4em]" style={{ color: GOLD }}>
+            Object {ROMAN[active]} &middot; 0{active + 1} / 0{chapters}
+          </span>
+
+          <div className="max-w-[92vw]">
+            <AnimatePresence mode="popLayout">
+              <motion.div
+                key={service.index}
+                initial={{ clipPath: "inset(0 0 0 0%)" }}
+                animate={{ clipPath: "inset(0 0 0 0%)" }}
+                exit={{ clipPath: "inset(0 0 0 100%)" }}
+                transition={{ duration: 0.55, ease: LUX_GLIDE }}
+              >
+                <KineticHeadline service={service} reveal={revealCount} />
+              </motion.div>
+            </AnimatePresence>
 
             <motion.div
-              className="mt-8"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
+              aria-hidden="true"
+              style={{ scaleX: underlineScale, backgroundColor: GOLD }}
+              className="mx-auto mt-6 h-px w-40 origin-center md:w-56"
+            />
+
+            <motion.p
+              style={{ opacity: descOpacity, y: descY, color: INK_DIM }}
+              className="mx-auto mt-7 max-w-md text-xs font-normal leading-relaxed md:text-sm"
             >
-              <button
-                type="button"
-                data-cursor="link"
-                onClick={() => window.dispatchEvent(new Event("wavex:open-admission"))}
-                className="button -big -up"
-              >
-                Request Access
-              </button>
-            </motion.div>
+              {service.description}
+            </motion.p>
           </div>
-
-          {/* Sequence nav */}
-          <div className="absolute bottom-[3vh] left-0 flex w-full items-center justify-between px-margin">
-            <div className="flex items-center gap-gap">
-              <button
-                type="button"
-                data-cursor="link"
-                onClick={() => scrollBy(-1)}
-                aria-label="Previous object"
-                className="grid h-10 w-10 place-items-center rounded-full bg-black text-yellow transition-transform duration-900 hover:scale-110"
-              >
-                <svg viewBox="0 0 12 12" className="h-3 w-3">
-                  <path d="M9 1 L3 6 L9 11" fill="none" stroke="currentColor" strokeWidth="1.4" />
-                </svg>
-              </button>
-              <div className="relative grid h-12 w-12 place-items-center">
-                <motion.svg viewBox="0 0 48 48" className="absolute inset-0 h-full w-full -rotate-90" aria-hidden="true">
-                  <circle cx="24" cy="24" r="22" fill="none" stroke="rgba(123,81,54,0.2)" strokeWidth="1" />
-                  <motion.circle
-                    cx="24"
-                    cy="24"
-                    r="22"
-                    fill="none"
-                    stroke="var(--c-brown)"
-                    strokeWidth="1.5"
-                    strokeDasharray={2 * Math.PI * 22}
-                    strokeDashoffset={ringOffset}
-                    strokeLinecap="round"
-                  />
-                </motion.svg>
-                <button
-                  type="button"
-                  data-cursor="link"
-                  onClick={() => scrollBy(1)}
-                  aria-label="Next object"
-                  className="grid h-9 w-9 place-items-center rounded-full bg-black text-yellow"
-                >
-                  <svg viewBox="0 0 12 12" className="h-3 w-3">
-                    <path d="M3 1 L9 6 L3 11" fill="none" stroke="currentColor" strokeWidth="1.4" />
-                  </svg>
-                </button>
-              </div>
-              <span className="-mm -up text-brown/70">
-                {String(active + 1).padStart(2, "0")} / 04
-              </span>
-            </div>
-
-            <motion.span key={service.index} className="-mm -up text-brown/70" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              {service.title}
-            </motion.span>
-          </div>
-
-          {/* Stone + ending */}
-          <motion.div
-            className="absolute bottom-[6vh] right-[6vw] w-[18vw]"
-            style={{ opacity: stoneOpacity, scale: stoneScale }}
-          >
-            <div className="figure mask-fade">
-              <img src={IMG.stone2} alt="Stone" loading="eager" decoding="async" />
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="absolute left-1/2 top-[38%] -translate-x-1/2 text-center"
-            style={{ opacity: endingOpacity, y: endingY }}
-          >
-            <h2 className="font-display text-[8vw] font-light leading-[0.9]">
-              In Motion,
-              <br />
-              <em className="text-brown/50">Always.</em>
-            </h2>
-          </motion.div>
         </div>
-      </div>
-    </section>
-  );
-}
 
-export default function Objects() {
-  return (
-    <>
-      <ObjectsGrid />
-      <ObjectsPath />
-    </>
+        {/* Bottom: marquee ticker */}
+        <div className="z-20">
+          <ModeMarquee />
+        </div>
+
+        {/* Finale — a foil-stamped headline, catching light as it settles */}
+        <motion.div
+          className="pointer-events-none absolute inset-0 z-50 flex flex-col items-center justify-center text-center"
+          style={{ opacity: finaleOpacity, y: finaleY, backgroundColor: BG }}
+        >
+          <span className="mb-4 font-mono text-[10px] uppercase tracking-[0.4em]" style={{ color: "rgba(242,233,216,0.5)" }}>
+            Principle
+          </span>
+          <h2
+            className="font-serif text-[8vw] font-light leading-[0.9] motion-safe:animate-[foil-sweep_6s_ease-in-out_infinite]"
+            style={{
+              backgroundImage: `linear-gradient(100deg, ${INK} 20%, ${GOLD} 40%, #fff8e7 50%, ${GOLD} 60%, ${INK} 80%)`,
+              backgroundSize: "220% 100%",
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              color: "transparent",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            In Motion,
+            <br />
+            <em>Always.</em>
+          </h2>
+          <motion.div
+            aria-hidden="true"
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 1, delay: 0.3, ease: LUX_GLIDE }}
+            className="mt-6 h-px w-24 origin-center"
+            style={{ backgroundColor: GOLD }}
+          />
+          <motion.button
+            type="button"
+            data-cursor="link"
+            onClick={() => window.dispatchEvent(new Event("wavex:open-admission"))}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.6 }}
+            className="group pointer-events-auto relative mt-10 inline-flex items-center gap-3 overflow-hidden rounded-[0.2rem] border px-7 py-3 font-mono text-[10px] uppercase tracking-[0.3em] transition-colors duration-500"
+            style={{ borderColor: INK, color: INK }}
+          >
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 -translate-x-full transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] group-hover:translate-x-0"
+              style={{ backgroundColor: GOLD }}
+            />
+            <span className="relative transition-colors duration-500 group-hover:text-[#0b0907]">
+              Request Access &rarr;
+            </span>
+          </motion.button>
+        </motion.div>
+      </div>
+
+      <style jsx global>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        @keyframes foil-sweep {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+      `}</style>
+    </section>
   );
 }

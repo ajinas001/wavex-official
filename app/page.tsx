@@ -15,9 +15,9 @@ export default function Home() {
       <PlacesBento />
       <PlacesAfter />
       <Objects />
-      <Connection />
-      <Updates />
-      <People />
+      {/* <Connection /> */}
+      {/* <Updates /> */}
+      {/* <People /> */}
       <Admission />
       <Footer />
     </>

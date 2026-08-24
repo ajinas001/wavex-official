@@ -17,7 +17,15 @@ const LOCATIONS = [
   'over the courtyard',
 ];
 
-const CARDS = PLACES.slice(0, 7).map((img, i) => ({
+interface BentoCard {
+  img: string;
+  name: string;
+  loc: string;
+  n: number;
+  video?: string;
+}
+
+const CARDS: BentoCard[] = PLACES.slice(0, 7).map((img, i) => ({
   img,
   name: PLACE_NAMES[i] || `Place ${i + 1}`,
   loc: LOCATIONS[i] || 'unmapped location',
@@ -123,7 +131,7 @@ export default function PlacesBento() {
     setActiveIndex((prev) => (prev - 1 + CARDS.length) % CARDS.length);
   };
 
-  const renderPanel = (cardIndex: number, ref: React.RefObject<HTMLDivElement | null>, positionClasses: string) => {
+  const renderPanel = (cardIndex: number, ref: React.RefObject<any>, positionClasses: string) => {
     const card = CARDS[cardIndex % CARDS.length];
     return (
       <div

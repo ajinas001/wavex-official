@@ -7,6 +7,7 @@ import Updates from "@/components/obsidian/sections/Updates";
 import People from "@/components/obsidian/sections/People";
 import Admission from "@/components/obsidian/sections/Admission";
 import Footer from "@/components/obsidian/sections/Footer";
+import OriginObjectsScrollSequence from "@/components/obsidian/sections/Services";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       <PlacesBento />
       <PlacesAfter />
       <Objects />
+      <OriginObjectsScrollSequence/>
       {/* <Connection /> */}
       {/* <Updates /> */}
       {/* <People /> */}

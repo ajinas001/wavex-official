@@ -92,9 +92,9 @@ export default function Header() {
             className="brand -nl"
           >
             <span className="-h5 the">The</span>
-            <span className="-h5 obsidian">Obsidian</span>
-            <span className="-h5 assembly">Assembly</span>
-            <span className="-mm">Imagine Possible</span>
+            <span className="-h5 obsidian">Wavex</span>
+            <span className="-h5 assembly">Agency</span>
+            <span className="-mm">Build. Launch. Grow.</span>
           </a>
 
           <button
@@ -103,7 +103,7 @@ export default function Header() {
             onClick={() => scrollToId("places")}
             className="button -p -m-m -reverse places"
           >
-            <SplitHover text="Places" className="text -mm -up" />
+            <SplitHover text="Services" className="text -mm -up" />
           </button>
           <span className="sep" aria-hidden="true" />
           <button
@@ -112,7 +112,7 @@ export default function Header() {
             onClick={() => scrollToId("objects")}
             className="button -p -m-m -reverse objects"
           >
-            <SplitHover text="Objects" className="text -mm -up" />
+            <SplitHover text="Work" className="text -mm -up" />
           </button>
 
           <button
@@ -121,7 +121,7 @@ export default function Header() {
             onClick={openAdmission}
             className="button -p -m-m -reverse request"
           >
-            <SplitHover text="send request" className="text -mm -up" />
+            <SplitHover text="Get a Quote" className="text -mm -up" />
           </button>
 
           <div className="menu-wrap">

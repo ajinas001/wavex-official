@@ -19,10 +19,10 @@ interface FieldDef {
 }
 
 const FIELDS: FieldDef[] = [
-  { id: "full_name", label: "Full Name", type: "text", required: true, min: 2, placeholder: "Nick Harrison" },
-  { id: "email_address", label: "Email Address", type: "email", required: true, placeholder: "nick-h@gmail.com" },
-  { id: "country", label: "Country", type: "text", placeholder: "Switzerland" },
-  { id: "city", label: "City", type: "text", placeholder: "Basel" },
+  { id: "full_name", label: "Full Name", type: "text", required: true, min: 2, placeholder: "Jane Smith" },
+  { id: "email_address", label: "Email Address", type: "email", required: true, placeholder: "jane@company.com" },
+  { id: "company", label: "Company / Brand", type: "text", placeholder: "Acme Inc." },
+  { id: "budget", label: "Estimated Budget", type: "text", placeholder: "$5,000 – $15,000" },
 ];
 
 const CONTEXT_ID = "context_for_admission";
@@ -107,7 +107,7 @@ export default function AdmissionForm() {
               {/* Top bar */}
               <div className="flex items-start justify-between">
                 <span className="font-display text-[1.5rem] font-light leading-none">
-                  The WaveX Assembly
+                  The Wavex Agency
                 </span>
                 <button
                   type="button"
@@ -129,15 +129,14 @@ export default function AdmissionForm() {
                     Received.
                   </h2>
                   <p className="mt-6 max-w-md text-[var(--p)] text-black/60">
-                    Your request is in. We consider every admission
-                    personally and reply within a day.
+                    Your brief is with us. We review every project personally and come back to you within 24 hours with next steps.
                   </p>
                   <Button label="Return to site" variant="solid" onClick={() => setOpen(false)} className="mt-12" />
                 </div>
               ) : (
                 <>
                   <h2 className="mt-10 font-display text-[var(--h2)] md:text-[var(--h1)] font-light leading-[1.02]">
-                    Admission
+                    Project Brief
                   </h2>
 
                   <form
@@ -192,7 +191,7 @@ export default function AdmissionForm() {
 
                     <label className="flex flex-col gap-2 border-t border-black/20 pt-6">
                       <span className="font-display text-[var(--h5)] font-light text-black/60">
-                        Context for Admission
+                        Project Description
                       </span>
                       <textarea
                         id={CONTEXT_ID}
@@ -201,7 +200,7 @@ export default function AdmissionForm() {
                         onChange={(e) => setContext(e.target.value)}
                         onBlur={() => setContextTouched(true)}
                         className="w-full resize-none bg-transparent font-body text-[var(--p)] leading-relaxed text-black outline-none"
-                        placeholder="I am an Artist, leaving in…"
+                        placeholder="We need a complete e-commerce site with…"
                       />
                       {contextTouched && context.trim().length > 0 && context.trim().length < 10 && (
                         <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-red">
@@ -220,7 +219,7 @@ export default function AdmissionForm() {
                       <span className="text-[var(--mm)] text-black/70">
                         I accept the{" "}
                         <a href="#" className="text-brown underline hover:no-underline">
-                          ImaginePossible Policy
+                          Wavex Privacy Policy
                         </a>
                         .
                       </span>
@@ -231,7 +230,7 @@ export default function AdmissionForm() {
                     )}
 
                     <div className="pb-24 pt-4">
-                      <Button label="Submit Admission" variant="solid" onClick={submit} className="w-full" />
+                      <Button label="Send Brief" variant="solid" onClick={submit} className="w-full" />
                     </div>
                   </form>
                 </>

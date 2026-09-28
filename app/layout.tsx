@@ -18,30 +18,33 @@ const mono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://wavex.studio"),
   title: {
-    default: "WaveX — A Private Assembly for Makers",
-    template: "%s — WaveX",
+    default: "Wavex Agency — Premium Web Design & Development",
+    template: "%s — Wavex Agency",
   },
   description:
-    "WaveX is a private assembly for makers — places, objects and admission in equal measure.",
+    "Wavex is a freelance web design and development agency. We build high-performance websites, e-commerce platforms, and digital products for ambitious brands.",
   keywords: [
-    "web design studio",
-    "creative studio",
-    "interactive design",
-    "Next.js development",
-    "motion design",
+    "web design agency",
+    "web development studio",
+    "freelance web developer",
+    "Next.js agency",
+    "e-commerce development",
+    "UI UX design",
+    "digital agency",
+    "Wavex",
   ],
   openGraph: {
-    title: "WaveX — A Private Assembly for Makers",
+    title: "Wavex Agency — Premium Web Design & Development",
     description:
-      "Places, objects and admission. Work happens slowly, on purpose.",
+      "We build premium websites, e-commerce platforms, and digital products that perform. Your vision, our code, live.",
     url: "https://wavex.studio",
-    siteName: "WaveX",
+    siteName: "Wavex Agency",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "WaveX — A Private Assembly for Makers",
-    description: "Places, objects and admission.",
+    title: "Wavex Agency — Premium Web Design & Development",
+    description: "Premium websites and digital products for ambitious brands.",
   },
   robots: {
     index: true,

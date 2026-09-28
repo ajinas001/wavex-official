@@ -18,10 +18,9 @@ const TOTAL_FRAMES = 215;
 const FRAME_PATH = (index: number) =>
   `/assets/sequence/ezgif-frame-${String(index + 1).padStart(3, "0")}.jpg`;
 
-const INK_DIM = "rgba(242,233,216,0.7)";
-const BG_DARK = "#0b0907";
-const GOLD = "#c9a463";
-const LUX_GLIDE = [0.65, 0, 0.35, 1] as const;
+const INK_DIM = "rgba(var(--c-yellow-rgb),0.7)";
+const BG_DARK = "#151415"; // var(--c-black) token
+const LUX_GLIDE = [0.5, 0, 0.3, 1] as const; // --f-cubic mirror hero
 
 interface ServiceStage {
   service: Service;
@@ -53,53 +52,26 @@ const STAGES: ServiceStage[] = [
 ];
 
 /* -------------------------------------------------------------------------- */
-/*  PRELOADER                                                                  */
+/*  SKELETON PLACEHOLDER                                                       */
 /* -------------------------------------------------------------------------- */
-function Preloader({
-  progress,
-  loadedCount,
-  total,
-}: {
-  progress: number;
-  loadedCount: number;
-  total: number;
-}) {
+function SkeletonOverlay() {
   return (
-    <motion.div
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: 0.8, ease: LUX_GLIDE } }}
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0b0907] px-6 text-center"
-    >
-      <div className="relative mb-8 flex h-16 w-16 items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-0 rounded-full border border-dashed border-[rgba(201,164,99,0.4)]"
-        />
-        <span className="font-mono text-xs tracking-widest text-[#c9a463]">
-          WX
-        </span>
+    <div className="pointer-events-none absolute inset-0 z-15 flex items-center justify-center p-8">
+      <div className="relative flex h-full w-full max-w-4xl flex-col items-center justify-center gap-6 rounded-2xl border border-[rgba(var(--c-yellow-rgb),0.08)] bg-[rgba(var(--c-black-rgb),0.42)] p-8 backdrop-blur-sm animate-pulse">
+        <div className="flex w-full max-w-md flex-col items-center gap-3">
+          <div className="h-4 w-32 rounded-full bg-[rgba(var(--c-brown-rgb),0.18)]" />
+          <div className="h-8 w-64 rounded-lg bg-[rgba(var(--c-yellow-rgb),0.1)]" />
+          <div className="h-3 w-48 rounded-full bg-[rgba(var(--c-yellow-rgb),0.06)]" />
+        </div>
+        <div className="relative my-4 flex h-64 w-full max-w-lg items-center justify-center rounded-xl border border-[rgba(var(--c-stroke-rgb),0.12)] bg-[rgba(var(--c-yellow-rgb),0.03)] shadow-2xl md:h-80">
+          <div className="h-20 w-20 rounded-full border border-dashed border-[rgba(var(--c-stroke-rgb),0.35)] bg-[rgba(var(--c-brown-rgb),0.06)]" />
+        </div>
+        <div className="flex w-full max-w-sm flex-col gap-2">
+          <div className="h-3 w-full rounded bg-[rgba(var(--c-yellow-rgb),0.08)]" />
+          <div className="h-3 w-3/4 rounded bg-[rgba(var(--c-yellow-rgb),0.05)]" />
+        </div>
       </div>
-
-      <h3 className="mb-2 font-serif text-2xl font-light tracking-wide text-[#f2e9d8] md:text-3xl">
-        WaveX &middot; Objects Sequence
-      </h3>
-      <p className="mb-8 font-mono text-[10px] uppercase tracking-[0.3em] text-[rgba(242,233,216,0.5)]">
-        60FPS High-Res Assets &middot; {loadedCount} / {total}
-      </p>
-
-      <div className="relative h-1 w-64 overflow-hidden rounded-full bg-[rgba(242,233,216,0.12)] md:w-80">
-        <motion.div
-          className="h-full bg-gradient-to-r from-[#c9a463] via-[#f2e9d8] to-[#c9a463]"
-          style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
-          transition={{ ease: "easeOut", duration: 0.1 }}
-        />
-      </div>
-
-      <div className="mt-4 font-mono text-xs tracking-widest text-[#c9a463]">
-        {Math.round(progress)}%
-      </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -130,19 +102,14 @@ function ServiceTextReveal({
       transition={{ duration: 0.6, ease: LUX_GLIDE }}
       className={`pointer-events-none absolute z-30 flex flex-col max-w-xl md:max-w-2xl ${positionClasses}`}
     >
-      {/* Index Badge */}
-      
-
-      {/* Hero Font Voyage-Regular + SplitChars Reveal */}
       <div className="w-full">
         <SplitChars
           as="h2"
           text={service.title}
-          className="-lrg text-[9vw] md:text-[5.5vw] font-light leading-[0.9] tracking-tight text-[#3f383c] drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]"
+          className="-lrg font-light leading-[0.9] tracking-tight text-yellow drop-shadow-[0_4px_20px_rgba(0,0,0,0.7)]"
           once={false}
         />
       </div>
-
     </motion.div>
   );
 }
@@ -153,63 +120,15 @@ function ServiceTextReveal({
 export default function Scroll() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const imagesRef = useRef<HTMLImageElement[]>([]);
+  const imagesRef = useRef<(HTMLImageElement | null)[]>([]);
   const lastRenderedFrameRef = useRef<number>(-1);
   const animationFrameIdRef = useRef<number | null>(null);
 
-  const [imagesLoaded, setImagesLoaded] = useState(false);
-  const [loadProgress, setLoadProgress] = useState(0);
-  const [loadedCount, setLoadedCount] = useState(0);
   const [activeStageIndex, setActiveStageIndex] = useState(0);
+  const [currentFrameLoaded, setCurrentFrameLoaded] = useState(false);
 
   /* -------------------------------------------------------------------------- */
-  /*  PRELOAD ALL 215 FRAMES WITH ASYNC DECODING FOR INSTANT DRAW               */
-  /* -------------------------------------------------------------------------- */
-  useEffect(() => {
-    let isCancelled = false;
-    const loadedImages: HTMLImageElement[] = new Array(TOTAL_FRAMES);
-    let completed = 0;
-
-    for (let i = 0; i < TOTAL_FRAMES; i++) {
-      const img = new Image();
-      img.src = FRAME_PATH(i);
-
-      const checkComplete = () => {
-        if (isCancelled) return;
-        completed++;
-        setLoadedCount(completed);
-        setLoadProgress((completed / TOTAL_FRAMES) * 100);
-
-        if (completed === TOTAL_FRAMES) {
-          imagesRef.current = loadedImages;
-          setImagesLoaded(true);
-        }
-      };
-
-      img.onload = () => {
-        if ("decode" in img) {
-          img.decode().then(checkComplete).catch(checkComplete);
-        } else {
-          checkComplete();
-        }
-      };
-
-      img.onerror = checkComplete;
-      loadedImages[i] = img;
-    }
-
-    return () => {
-      isCancelled = true;
-    };
-  }, []);
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
-
-  /* -------------------------------------------------------------------------- */
-  /*  60FPS FULLSCREEN CANVAS DRAWING ENGINE                                    */
+  /*  60FPS FULLSCREEN CANVAS DRAWING ENGINE WITH SKELETON FALLBACK             */
   /* -------------------------------------------------------------------------- */
   const drawFrame = useCallback((frameIdx: number) => {
     const canvas = canvasRef.current;
@@ -217,15 +136,56 @@ export default function Scroll() {
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
-    const img = imagesRef.current[frameIdx];
-    if (!img || !img.complete || img.naturalWidth === 0) return;
-
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-
     const displayWidth = canvas.clientWidth;
     const displayHeight = canvas.clientHeight;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    if (canvas.width !== displayWidth * dpr || canvas.height !== displayHeight * dpr) {
+      canvas.width = displayWidth * dpr;
+      canvas.height = displayHeight * dpr;
+    }
+
+    const img = imagesRef.current[frameIdx];
+    if (!img || !img.complete || img.naturalWidth === 0) {
+      setCurrentFrameLoaded(false);
+
+      // Clear canvas with dark background
+      ctx.fillStyle = BG_DARK;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Render canvas skeleton representation
+      const w = canvas.width;
+      const h = canvas.height;
+      const cardW = w * 0.4;
+      const cardH = h * 0.5;
+      const rx = (w - cardW) / 2;
+      const ry = (h - cardH) / 2;
+
+      ctx.fillStyle = "rgba(241, 234, 222, 0.03)";
+      ctx.strokeStyle = "rgba(159, 175, 155, 0.18)";
+      ctx.lineWidth = 1.5 * dpr;
+
+      ctx.beginPath();
+      if (typeof ctx.roundRect === "function") {
+        ctx.roundRect(rx, ry, cardW, cardH, 16 * dpr);
+      } else {
+        ctx.rect(rx, ry, cardW, cardH);
+      }
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(123, 81, 54, 0.08)";
+      ctx.beginPath();
+      ctx.arc(w / 2, h / 2, Math.min(cardW, cardH) * 0.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      return;
+    }
+
+    setCurrentFrameLoaded(true);
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
 
     const imgWidth = img.naturalWidth;
     const imgHeight = img.naturalHeight;
@@ -253,10 +213,73 @@ export default function Scroll() {
     ctx.drawImage(img, renderX * dpr, renderY * dpr, renderW * dpr, renderH * dpr);
   }, []);
 
+  /* -------------------------------------------------------------------------- */
+  /*  PRELOAD ALL 215 FRAMES IN BACKGROUND (NO PRELOADER SCREEN BLOCKING)       */
+  /* -------------------------------------------------------------------------- */
+  useEffect(() => {
+    let isCancelled = false;
+    const loadedImages: (HTMLImageElement | null)[] = new Array(TOTAL_FRAMES).fill(null);
+    imagesRef.current = loadedImages;
+
+    const loadFrame = (i: number) => {
+      const img = new Image();
+      // Prioritize near-current frames; rest deferred
+      (img as any).fetchPriority = i < 24 ? "high" : "low";
+      (img as any).loading = "eager";
+      img.decoding = "async";
+      img.src = FRAME_PATH(i);
+
+      const handleImageLoad = () => {
+        if (isCancelled) return;
+        loadedImages[i] = img;
+        if (i === lastRenderedFrameRef.current || (lastRenderedFrameRef.current === -1 && i === 0)) {
+          drawFrame(lastRenderedFrameRef.current >= 0 ? lastRenderedFrameRef.current : 0);
+        }
+      };
+
+      img.onload = () => {
+        if ("decode" in img) img.decode().then(handleImageLoad).catch(handleImageLoad);
+        else handleImageLoad();
+      };
+      img.onerror = () => {
+        if (isCancelled) return;
+        loadedImages[i] = null;
+      };
+    };
+
+    // Eager first 24 frames for immediate scrub, rest staggered via idle
+    for (let i = 0; i < Math.min(24, TOTAL_FRAMES); i++) loadFrame(i);
+
+    let nextIdle = 24;
+    const scheduleIdle = () => {
+      if (isCancelled || nextIdle >= TOTAL_FRAMES) return;
+      const idle = (window as any).requestIdleCallback as
+        | ((cb: () => void, opts?: { timeout: number }) => number)
+        | undefined;
+      const runBatch = () => {
+        const batch = Math.min(12, TOTAL_FRAMES - nextIdle);
+        for (let k = 0; k < batch; k++) loadFrame(nextIdle++);
+        if (nextIdle < TOTAL_FRAMES) scheduleIdle();
+      };
+      if (idle) idle(runBatch, { timeout: 1200 });
+      else setTimeout(runBatch, 120);
+    };
+    scheduleIdle();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [drawFrame]);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
   const resizeCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, window.innerWidth < 768 ? 1.5 : 2);
     const w = canvas.clientWidth;
     const h = canvas.clientHeight;
 
@@ -265,9 +288,8 @@ export default function Scroll() {
       canvas.height = h * dpr;
     }
 
-    if (lastRenderedFrameRef.current >= 0) {
-      drawFrame(lastRenderedFrameRef.current);
-    }
+    const frameToDraw = lastRenderedFrameRef.current >= 0 ? lastRenderedFrameRef.current : 0;
+    drawFrame(frameToDraw);
   }, [drawFrame]);
 
   const requestFrameRender = useCallback(
@@ -276,7 +298,7 @@ export default function Scroll() {
         0,
         Math.min(TOTAL_FRAMES - 1, Math.round(frameIdx))
       );
-      if (target === lastRenderedFrameRef.current) return;
+      if (target === lastRenderedFrameRef.current && currentFrameLoaded) return;
       lastRenderedFrameRef.current = target;
 
       if (animationFrameIdRef.current !== null) {
@@ -287,14 +309,13 @@ export default function Scroll() {
         drawFrame(target);
       });
     },
-    [drawFrame]
+    [drawFrame, currentFrameLoaded]
   );
 
   /* -------------------------------------------------------------------------- */
   /*  SCROLL PROGRESS SYNC                                                      */
   /* -------------------------------------------------------------------------- */
   useMotionValueEvent(scrollYProgress, "change", (progressVal) => {
-    if (!imagesLoaded) return;
     const frame = progressVal * (TOTAL_FRAMES - 1);
     requestFrameRender(frame);
 
@@ -308,7 +329,6 @@ export default function Scroll() {
   });
 
   useEffect(() => {
-    if (!imagesLoaded) return;
     resizeCanvas();
     requestFrameRender(0);
 
@@ -319,7 +339,7 @@ export default function Scroll() {
         cancelAnimationFrame(animationFrameIdRef.current);
       }
     };
-  }, [imagesLoaded, resizeCanvas, requestFrameRender]);
+  }, [resizeCanvas, requestFrameRender]);
 
   const jumpToStage = (stage: ServiceStage) => {
     if (!containerRef.current) return;
@@ -337,43 +357,30 @@ export default function Scroll() {
       ref={containerRef}
       id="objects"
       data-header-color="light"
-      className="relative h-[600vh] antialiased"
-      style={{ backgroundColor: BG_DARK }}
+      className="relative h-[600vh] antialiased bg-black"
+      style={{ backgroundColor: "var(--c-black)" }}
     >
-      {/* Preloader */}
-      <AnimatePresence>
-        {!imagesLoaded && (
-          <Preloader
-            progress={loadProgress}
-            loadedCount={loadedCount}
-            total={TOTAL_FRAMES}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Sticky Full-Screen Viewport */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
-        {/* Fullscreen Canvas */}
+      <div className="sticky top-0 h-screen w-full overflow-hidden bg-black">
         <canvas
           ref={canvasRef}
           className="absolute inset-0 h-full w-full object-cover"
         />
 
-        {/* Ambient Dark Edge Vignette */}
+        {!currentFrameLoaded && <SkeletonOverlay />}
+
         <div
           className="pointer-events-none absolute inset-0 z-10"
           style={{
             background:
-              "radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(11, 9, 7, 0.6) 100%)",
+              "radial-gradient(ellipse 110% 110% at 50% 50%, transparent 38%, rgba(var(--c-black-rgb),0.65) 100%)",
           }}
         />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-[rgba(var(--c-yellow-rgb),0.1)] to-transparent z-10" />
 
-        {/* Right Clickable Chapter Rail */}
         <div className="pointer-events-auto absolute right-6 top-1/2 z-30 hidden -translate-y-1/2 md:block md:right-10">
           <div className="relative flex flex-col items-center gap-6">
             <div
-              className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2"
-              style={{ backgroundColor: "rgba(242,233,216,0.15)" }}
+              className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-[rgba(var(--c-yellow-rgb),0.12)]"
             />
             {STAGES.map((s, i) => {
               const isActive = activeStageIndex === i;
@@ -386,16 +393,15 @@ export default function Scroll() {
                   className="group relative z-10 flex items-center gap-3"
                 >
                   <span
-                    className="pointer-events-none font-mono text-[9px] uppercase tracking-[0.25em] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    style={{ color: INK_DIM }}
+                    className="pointer-events-none font-mono text-[9px] uppercase tracking-[0.25em] opacity-0 transition-opacity duration-300 group-hover:opacity-100 text-yellow/60"
                   >
                     {s.service.index}
                   </span>
                   <span
                     className={`block rounded-full transition-all duration-500 ${
                       isActive
-                        ? "h-3 w-3 bg-[#c9a463] shadow-[0_0_12px_#c9a463]"
-                        : "h-2 w-2 bg-[rgba(242,233,216,0.3)] group-hover:scale-125 group-hover:bg-[#f2e9d8]"
+                        ? "h-3 w-3 bg-brown shadow-[0_0_12px_rgba(123,81,54,0.6)]"
+                        : "h-2 w-2 bg-[rgba(var(--c-yellow-rgb),0.28)] group-hover:scale-125 group-hover:bg-yellow"
                     }`}
                   />
                 </button>
@@ -412,3 +418,4 @@ export default function Scroll() {
     </section>
   );
 }
+

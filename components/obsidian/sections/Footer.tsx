@@ -11,8 +11,8 @@ const SOCIALS = [
 ];
 
 const LINKS = [
-  { text: "Places", href: "#places" },
-  { text: "Objects", href: "#objects" },
+  { text: "Services", href: "#places" },
+  { text: "Work", href: "#objects" },
   { text: "Contact", href: "#contact" },
 ];
 
@@ -26,7 +26,7 @@ export default function Footer() {
       <div className="relative overflow-hidden rounded-t-[3vw] bg-yellow px-gap pb-8 pt-12 text-brown md:px-margin">
         <div className="flex items-start justify-between">
           <span className="text-[10px] font-medium uppercase tracking-[0.25em] text-brown/50">
-            © 2026 The WaveX Assembly
+            © 2026 Wavex Agency
           </span>
           <div className="hidden items-center gap-6 text-[10px] font-medium uppercase tracking-[0.2em] text-brown/60 md:flex">
             <a href="#" data-cursor="link" className="transition-colors hover:text-brown">
@@ -66,7 +66,7 @@ export default function Footer() {
         <div className="mt-20 flex items-end justify-between border-t border-brown/10 pt-6">
           <div className="max-w-[40ch]">
             <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-brown/50">
-              WaveX — A private assembly for makers. Work happens slowly, on purpose.
+              Wavex — Your digital partner for web design, development & strategy. We build products that perform.
             </p>
             <div className="mt-4 flex items-center gap-6">
               {SOCIALS.map((s) => (

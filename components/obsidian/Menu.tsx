@@ -12,10 +12,10 @@ interface MenuProps {
 
 const LINKS = [
   { label: "Back Home", cls: "back-home", id: "top" },
-  { label: "Places", cls: "places", id: "places" },
-  { label: "Objects", cls: "objects", id: "objects" },
+  { label: "Services", cls: "places", id: "places" },
+  { label: "Work", cls: "objects", id: "objects" },
   { label: "About", cls: "about", id: "about" },
-  { label: "People", cls: "people", id: "people" },
+  { label: "Team", cls: "people", id: "people" },
 ];
 
 const LEAVE_MS = 2100; // overlay 1.5s + links ≤ 0.9 + 5*.15

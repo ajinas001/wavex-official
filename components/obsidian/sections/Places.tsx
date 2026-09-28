@@ -176,14 +176,14 @@ export default function Places() {
       </svg>
 
       <div className="title" aria-hidden="true">
-        <SplitChars as="span" text="Explore" className="-lrg line-1" dx={0.25} dy={-1} />
-        <SplitChars as="span" text="Places" className="-lrg line-2" dx={0.25} dy={-1} />
+        <SplitChars as="span" text="Our Work" className="-lrg line-1" dx={0.25} dy={-1} />
+        <SplitChars as="span" text="Portfolio" className="-lrg line-2" dx={0.25} dy={-1} />
       </div>
 
       <motion.span className="caption -h5 -m-h6" style={{ y: captionY }}>
-        <span>Not</span>
-        <span>Everything</span>
-        <span>is Visible</span>
+        <span>Results</span>
+        <span>That Speak</span>
+        <span>for Themselves</span>
       </motion.span>
 
       <motion.div

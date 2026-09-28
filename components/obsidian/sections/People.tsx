@@ -68,20 +68,20 @@ export default function People() {
       <div className="relative -w">
         <div className="flex items-baseline justify-between" style={{ gridColumn: "1 / 13" }}>
           <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-yellow/40">
-            People / Who Makes It
+            Team / The Minds Behind
           </span>
           <span className="hidden text-[10px] font-medium uppercase tracking-[0.3em] text-yellow/40 md:block">
-            The Wall
+            The Studio
           </span>
         </div>
 
         {/* title */}
         <div className="overflow-hidden" style={{ gridColumn: "1 / 8", gridRow: 2 }}>
-          <h2 className="font-display text-[11vw] font-light leading-[0.85]">The People</h2>
+          <h2 className="font-display text-[11vw] font-light leading-[0.85]">Our Team</h2>
         </div>
         <div className="overflow-hidden justify-self-end" style={{ gridColumn: "6 / 13", gridRow: 3 }}>
           <h2 className="font-display text-[11vw] font-light italic leading-[0.85] text-yellow/50">
-            behind.
+            at work.
           </h2>
         </div>
 
@@ -106,19 +106,19 @@ export default function People() {
           className="mt-[8vh] text-center font-display text-[5vw] font-light leading-[0.9]"
           style={{ gridColumn: "1 / 13", gridRow: 5 }}
         >
-          A hundred hands,
+          A focused team,
           <br />
-          <em className="text-yellow/50">one sharpened edge.</em>
+          <em className="text-yellow/50">one shared craft.</em>
         </motion.h3>
 
         {/* caption + ending */}
         <div className="mt-[6vh]" style={{ gridColumn: "9 / 13", gridRow: 6 }}>
           <p className="text-sm leading-relaxed text-yellow/70">
-            What was behind stays behind. Each window faces inward — the wall is the work, and the work never asks to be seen.
+            Designers, developers, and strategists who obsess over every pixel and line of code — working in concert to build digital products that last.
           </p>
         </div>
         <span className="mt-2 -mm -up text-yellow/40" style={{ gridColumn: "1 / 4", gridRow: 7 }}>
-          People — A Study of Hands
+          Team — The Builders
         </span>
       </div>
     </section>

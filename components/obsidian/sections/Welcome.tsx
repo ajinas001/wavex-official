@@ -6,6 +6,7 @@ import SplitChars from "../SplitChars";
 import SplitHover from "../SplitHover";
 import { useSectionProgress } from "@/hooks/useSectionProgress";
 import "../welcome.css";
+import Image from "next/image";
 
 /**
  * Welcome — hero. Obsidian `c-welcome` port (source-verbatim CSS):
@@ -90,6 +91,7 @@ export default function Welcome() {
   };
 
   return (
+    <>
     <motion.section
       ref={sectionRef}
       data-header-color="light"
@@ -109,17 +111,17 @@ export default function Welcome() {
       <div className="-w">
         <SplitChars
           as="span"
-          text="Nothing"
+          text="We Build"
           className="-lrg title line-1 grid-place"
         />
         <SplitChars
           as="span"
-          text="Shown"
-          className="-lrg title line-2 grid-place"
+          text="Digital"
+          className="-lrg title line-2 grid-place "
         />
         <SplitChars
           as="span"
-          text="First"
+          text="Worlds"
           className="-lrg title line-3 grid-place"
         />
 
@@ -127,17 +129,17 @@ export default function Welcome() {
           className="-mm line-1-m -a-to-top grid-place"
           style={{ "--l-delay": 0.3 } as CSSProperties}
         >
-          Coordinates
+          Premium Websites
           <br />
-          Withheld
+          That Convert
         </p>
         <p
           className="-mm line-2-m -a-to-top grid-place"
           style={{ "--l-delay": 0.45 } as CSSProperties}
         >
-          A Private Assembly
+          Crafted for
           <br />
-          for Makers
+          Ambitious Brands
         </p>
 
         <div
@@ -145,9 +147,9 @@ export default function Welcome() {
           style={{ "--l-delay": 0.6 } as CSSProperties}
         >
           <span className="cta-label -hp">
-            <span>Commitment</span>
-            <span>Precedes</span>
-            <span>Entry /</span>
+            <span>Your Vision</span>
+            <span>Our Code</span>
+            <span>Live /</span>
           </span>
           <button
             type="button"
@@ -155,7 +157,7 @@ export default function Welcome() {
             onClick={() => window.dispatchEvent(new Event("wavex:open-admission"))}
             className="-big button -p -m-m"
           >
-            <SplitHover text="Seek Admission" className="text -mm -up" />
+            <SplitHover text="Start a Project" className="text -mm -up" />
           </button>
         </div>
 
@@ -165,16 +167,22 @@ export default function Welcome() {
           onMouseMove={handleSpotlight}
           onMouseLeave={resetSpotlight}
         >
-          <img src="/images/home/stone.webp" alt="Stone" loading="lazy" />
-          <span className="hover-1" />
-          <span className="hover-2" />
+          <Image
+            src="/images/hero.png"
+            alt="Stone"
+            width={1000}
+            height={1000}
+            priority
+            className="w-[145%] h-[145%] max-w-none object-contain scale-110"
+          />  {/* <span className="hover-1" />
+          <span className="hover-2" /> */}
         </div>
 
         <figure className="-fit places grid-place" aria-hidden="true">
-          <img src="/images/offices/6.webp" alt="" loading="lazy" />
+          <img src="/images/left0.png" alt="" loading="lazy" className="w-full h-full object-cover rounded-[0.4rem]" />
         </figure>
         <figure className="-fit items grid-place" aria-hidden="true">
-          <img src="/images/offices/7.webp" alt="" loading="lazy" />
+          <img src="/images/right0.png" alt="" loading="lazy" className="w-full h-full object-cover rounded-[0.4rem]" />
         </figure>
       </div>
 
@@ -201,5 +209,6 @@ export default function Welcome() {
         />
       </svg>
     </motion.section>
+    </>
   );
 }

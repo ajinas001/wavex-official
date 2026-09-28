@@ -8,13 +8,13 @@ import { PLACES, PLACE_NAMES } from '@/data/images';
 import '../places-bento.css';
 
 const LOCATIONS = [
-  'below the ridge',
-  'level four · east stair',
-  'down the meadow',
-  'on the headland',
-  'behind the furnace wall',
-  'off the map',
-  'over the courtyard',
+  'E-commerce platform',
+  'Brand identity & web',
+  'SaaS dashboard',
+  'Corporate website',
+  'Mobile-first app',
+  'Landing page suite',
+  'Portfolio showcase',
 ];
 
 interface BentoCard {
@@ -32,7 +32,6 @@ const CARDS: BentoCard[] = PLACES.slice(0, 7).map((img, i) => ({
   n: i + 1,
 }));
 
-// Optional: Provide a dedicated video source or fallback to a sample standard video
 const CENTER_VIDEO_SRC = './hero.mp4';
 
 export default function PlacesBento() {
@@ -67,9 +66,9 @@ export default function PlacesBento() {
 
     const trigger = triggerRef.current;
     const pin = pinRef.current;
+    if (!trigger || !pin) return;
 
-    // Reset exact positions matching the bento grid reference
-    gsap.set(centerCardRef.current, { width: '40vw', height: '22vw', borderRadius: '10px' });
+    gsap.set(centerCardRef.current, { width: '40vw', height: '22vw', borderRadius: '10px', willChange: 'transform, width, height' });
     gsap.set(
       [
         card1Ref.current,
@@ -79,7 +78,7 @@ export default function PlacesBento() {
         card6Ref.current,
         card7Ref.current,
       ],
-      { opacity: 1, x: 0, y: 0, scale: 1 }
+      { opacity: 1, x: 0, y: 0, scale: 1, willChange: 'transform, opacity' }
     );
 
     const tl = gsap.timeline({
@@ -87,9 +86,11 @@ export default function PlacesBento() {
         trigger: trigger,
         start: 'top top',
         end: 'bottom bottom',
-        scrub: 1.1,
+        scrub: 0.9,
         pin: pin,
         pinSpacing: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
       },
     });
 
@@ -113,8 +114,14 @@ export default function PlacesBento() {
       .to(card6Ref.current, { x: '45vw', y: '-20vh', opacity: 0, ease: 'power1.inOut', duration: 2.0 }, 'zoom')
       .to(card7Ref.current, { x: '45vw', y: '25vh', opacity: 0, ease: 'power1.inOut', duration: 2.0 }, 'zoom');
 
+    const onResize = () => ScrollTrigger.refresh();
+    window.addEventListener('resize', onResize);
+
     return () => {
       window.removeEventListener('resize', checkResponsiveBypass);
+      window.removeEventListener('resize', onResize);
+      tl.scrollTrigger?.kill();
+      tl.kill();
       ScrollTrigger.getAll().forEach((t) => {
         if (t.trigger === trigger) t.kill();
       });
@@ -155,16 +162,16 @@ export default function PlacesBento() {
       <section id="places" data-header-color="light" className="c-bento py-16 px-4 md:px-8 bg-[#0a0a0a]">
         <div className="bento-inner max-w-7xl mx-auto">
           <div className="b-head mb-6">
-            <SplitChars as="span" text="Explore" className="-lrg" dx={0.25} dy={-1} />
-            <SplitChars as="span" text="Places" className="-lrg line-2" dx={0.25} dy={-1} />
+            <SplitChars as="span" text="Our Work" className="-lrg" dx={0.25} dy={-1} />
+            <SplitChars as="span" text="Portfolio" className="-lrg line-2" dx={0.25} dy={-1} />
           </div>
 
           <div className="b-meta mb-12 flex justify-between items-end">
             <span className="cap -h5 -m-h6">
-              <span>Not</span> <span>Everything</span> <span>is Visible</span>
+              <span>Results</span> <span>That Speak</span> <span>for Themselves</span>
             </span>
             <span className="b-count -mm text-xs font-mono text-neutral-400">
-              07 — Places
+              07 — Projects
             </span>
           </div>
 
@@ -194,8 +201,8 @@ export default function PlacesBento() {
       {/* 1. Header (Flows away naturally upon scroll) */}
       <div className="bento-inner w-full max-w-7xl mx-auto px-6 pt-16 pb-8 flex flex-col items-center text-center">
         <div className="b-head">
-          <SplitChars as="span" text="Explore" className="-lrg" dx={0.25} dy={-1} />
-          <SplitChars as="span" text="Places" className="-lrg line-2" dx={0.25} dy={-1} />
+          <SplitChars as="span" text="Our Work" className="-lrg" dx={0.25} dy={-1} />
+          <SplitChars as="span" text="Portfolio" className="-lrg line-2" dx={0.25} dy={-1} />
         </div>
       </div>
 
@@ -208,7 +215,7 @@ export default function PlacesBento() {
             {/* Top Center Metadata Text */}
             <div className="absolute top-[3vh] left-1/2 -translate-x-1/2 text-center pointer-events-none z-30 flex flex-col items-center">
               <span className="cap -h5 -m-h6 text-neutral-200 font-serif text-lg leading-tight block">
-                <span>Not</span> <span>Everything</span> <span>is Visible</span>
+                <span>Results</span> <span>That Speak</span> <span>for Themselves</span>
               </span>
             </div>
 

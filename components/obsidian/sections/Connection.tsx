@@ -101,20 +101,20 @@ export default function Connection() {
     <section ref={ref} id="contact" data-header-color="dark" className="relative bg-light pb-10 pt-[14vh] text-black">
       <div className="-w">
         <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-black/50" style={{ gridColumn: "1 / 4" }}>
-          Contact / Staying in Touch
+          Contact / Let&apos;s Collaborate
         </span>
 
         <div className="overflow-hidden" style={{ gridColumn: "1 / 10", gridRow: 2 }}>
           <h2 className="font-display text-[12vw] font-light leading-[0.85] md:text-[7vw]">
-            Staying in
+            Let&apos;s Work
             <br />
-            <em className="text-black/40">Touch.</em>
+            <em className="text-black/40">Together.</em>
           </h2>
         </div>
 
         <div className="mt-[6vh]" style={{ gridColumn: "10 / 13", gridRow: 2, alignSelf: "end" }}>
           <p className="max-w-xs text-sm leading-relaxed text-black/60">
-            No pipelines, no portals. Write, and the answer comes back — slowly, on purpose, like everything here.
+            Tell us about your project. We respond to every inquiry personally and get back to you within 24 hours.
           </p>
         </div>
       </div>
@@ -141,8 +141,8 @@ export default function Connection() {
 
       {/* rows */}
       <div className="mt-[4vh] border-b border-black/10">
-        <Row label="Email" value="studio@wavex.studio" action="copy" />
-        <Row label="Studio" value="wavex.studio" action="link" href="https://wavex.studio" />
+        <Row label="Email" value="hello@wavex.studio" action="copy" />
+        <Row label="Website" value="wavex.studio" action="link" href="https://wavex.studio" />
         <div className="group relative overflow-hidden border-t border-black/10">
           <span className="absolute inset-0 origin-bottom scale-y-0 bg-yellow transition-transform duration-900 ease-[cubic-bezier(0.69,0,0,1)] group-hover:scale-y-100" />
           <div className="relative flex items-center justify-between px-gap py-6 md:px-margin md:py-10">
@@ -155,7 +155,7 @@ export default function Connection() {
                   <img src={IMG.guy1} alt="" loading="lazy" />
                 </span>
                 <span className="font-display text-[8vw] font-light leading-none transition-transform duration-900 group-hover:translate-x-3 md:text-[4.5vw]">
-                  @wavex.studio
+                  @wavex.agency
                 </span>
               </span>
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-black/20 transition-all duration-900 group-hover:rotate-45 group-hover:bg-black group-hover:text-yellow md:h-12 md:w-12">
@@ -171,10 +171,10 @@ export default function Connection() {
       {/* footers */}
       <div className="-w mt-6">
         <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-black/40" style={{ gridColumn: "1 / 5" }}>
-          By hand. No forms, no pipelines.
+          Direct. No forms, no middlemen.
         </span>
         <span className="text-right text-[10px] font-medium uppercase tracking-[0.3em] text-black/40" style={{ gridColumn: "9 / 13" }}>
-          Responds within 48 hours
+          Responds within 24 hours
         </span>
       </div>
     </section>

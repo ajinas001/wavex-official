@@ -46,10 +46,10 @@ export default function Admission() {
       <div className="px-gap md:px-margin">
         <div className="flex items-center justify-between">
           <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-brown/50">
-            Admission / Ask to be
+            Get Started / Work With Us
           </span>
           <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-brown/50">
-            Currently Inviting
+            Now Accepting Clients
           </span>
         </div>
 
@@ -61,22 +61,21 @@ export default function Admission() {
 
         <div className="mt-[10vh] flex flex-col items-center text-center">
           <div className="overflow-hidden">
-            <h2 className="font-display text-[13vw] font-light leading-[0.85] md:text-[8vw]">
-              Ask to be
-            </h2>
-          </div>
-          <div className="overflow-hidden">
-            <h2 className="font-display text-[13vw] font-light italic leading-[0.85] text-brown/50 md:text-[8vw]">
-              admitted.
-            </h2>
+              <h2 className="font-display text-[13vw] font-light leading-[0.85] md:text-[8vw]">
+                Start a
+              </h2>
+            </div>
+            <div className="overflow-hidden">
+              <h2 className="font-display text-[13vw] font-light italic leading-[0.85] text-brown/50 md:text-[8vw]">
+                Project.
+              </h2>
           </div>
           <p className="mt-8 max-w-sm text-sm leading-relaxed text-brown/70">
-            Seats are offered slowly, and kept rare. Tell us who you are and
-            what you mean to make.
+            Tell us about your project — what you need, what you've imagined, and what deadline you're working towards. We'll get back to you within 24 hours.
           </p>
           <div className="mt-8">
             <Button
-              label="Apply for Admission"
+              label="Begin the Brief"
               variant="solid"
               onClick={() => window.dispatchEvent(new Event("wavex:open-admission"))}
             />

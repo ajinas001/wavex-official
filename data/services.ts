@@ -7,26 +7,26 @@ export interface Service {
 export const services: Service[] = [
   {
     index: "01",
-    title: "Brand & Art Direction",
+    title: "Web Design & UI/UX",
     description:
-      "Visual systems, typography and motion identity built to hold a studio's point of view across every surface.",
+      "Pixel-perfect interfaces engineered for clarity and conversion — every screen purpose-built to drive results for your brand.",
   },
   {
     index: "02",
-    title: "Web Design & Development",
+    title: "Web Development",
     description:
-      "Handcrafted, high-performance sites — from first sketch to production code, tuned for feel as much as function.",
+      "Blazing-fast, SEO-optimised websites and web apps built with Next.js, React and modern tooling — ready to scale from day one.",
   },
   {
     index: "03",
-    title: "Interactive & 3D",
+    title: "E-Commerce Solutions",
     description:
-      "WebGL, generative motion and spatial interfaces for moments that ask to be remembered, not just viewed.",
+      "Custom storefronts on Shopify, WooCommerce or headless platforms — designed to sell, built to perform under pressure.",
   },
   {
     index: "04",
-    title: "Product Strategy",
+    title: "Digital Strategy",
     description:
-      "Positioning and structure work that happens before a single pixel — so the design has something true to say.",
+      "End-to-end product thinking — from user research and IA to go-to-market roadmaps that give every feature a reason to exist.",
   },
 ];

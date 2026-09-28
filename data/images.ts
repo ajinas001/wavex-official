@@ -115,11 +115,11 @@ export const PLACES: string[] = [
 
 /** Corresponding names for each place item in PLACES */
 export const PLACE_NAMES: string[] = [
-  "Silent Room",
-  "The Underscore",
-  "Halcyon Hall",
-  "North Window",
-  "Foundry",
-  "Slow House",
-  "The Long Gallery",
+  "Booker Store",
+  "Vexa Dashboard",
+  "Halcyon Brand",
+  "Farasha Shop",
+  "AlSarh Corp",
+  "Studio Launch",
+  "WaveX Agency",
 ];

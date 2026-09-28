@@ -66,26 +66,26 @@ export default function PlacesAfter() {
 
       <div className="-w">
         <span className="title -h1 -m-h3 grid-place">
-          <span>You Won&rsquo;t</span>
-          <span>Find Them</span>
-          <span>on a Map</span>
+          <span>Built With</span>
+          <span>Purpose</span>
+          <span>Delivered</span>
         </span>
 
         <motion.p className="subtitle -p-h6 grid-place" {...reveal}>
-          These places aren&rsquo;t broadly announced.
+          Every project we take on is shaped with intention.
         </motion.p>
 
-        <motion.p className="caption -m grid-place" {...reveal}>
+        <motion.p className="caption -m grid-place">
           {" "}
-          There are <span className="-h5">7</span> in operation at the moment,
-          each established within a specific context and maintained with
-          discretion. Their presence is intentional, shaped by location rather
-          than visibility. Access is considered, not assumed.{" "}
+          We have built over <span className="-h5">50</span> digital products across
+          e-commerce, SaaS, and corporate verticals —
+          each engineered for performance, crafted for clarity, and designed
+          to grow. Our process is thorough, not rushed.{" "}
         </motion.p>
 
         <motion.span className="cta-label -hp grid-place" {...reveal}>
-          <span>See if</span>
-          <span>Nearby /</span>
+          <span>Let&rsquo;s Build</span>
+          <span>Together /</span>
         </motion.span>
 
         <button
@@ -94,7 +94,7 @@ export default function PlacesAfter() {
           onClick={() => window.dispatchEvent(new Event("wavex:open-admission"))}
           className="button -big -p -m-m grid-place"
         >
-          <SplitHover text="Seek Admission" className="text -mm -up" />
+          <SplitHover text="Start a Project" className="text -mm -up" />
         </button>
       </div>
 

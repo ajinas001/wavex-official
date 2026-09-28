@@ -15,23 +15,23 @@ const UPDATES = [
   {
     img: IMG.updates[0],
     num: "01",
-    status: "Identity",
-    title: "Open for two places",
-    caption: "Brand & Art Direction is open for two places. Application closes at the next new moon.",
+    status: "Web Design",
+    title: "Booker Store launched",
+    caption: "Full e-commerce platform for Booker went live this week — responsive, fast, and conversion-optimised from the ground up.",
   },
   {
     img: IMG.updates[1],
     num: "02",
-    status: "Places",
-    title: "The Underscore is complete",
-    caption: "The Underscore is complete, and occupied. North Window enters final finishing.",
+    status: "SaaS Product",
+    title: "Vexa Dashboard complete",
+    caption: "Vexa\'s internal analytics dashboard is complete and in production. Clean UI, real-time data, fully accessible.",
   },
   {
     img: IMG.updates[2],
     num: "03",
-    status: "Rituals",
-    title: "Studio Fridays resume",
-    caption: "Studio Fridays resume at first light. Guests are welcome only by handshake and introduction.",
+    status: "Branding & Web",
+    title: "AlSarh Corp rebranded",
+    caption: "AlSarh Corporation\'s full brand refresh and corporate website are live. Identity-led design meeting enterprise standards.",
   },
 ];
 
@@ -125,16 +125,16 @@ export default function Updates() {
           {/* micro */}
           <div className="flex items-baseline justify-between" style={{ gridColumn: "1 / 7" }}>
             <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-black/50">
-              Updates / The Record
+              Projects / Recent Work
             </span>
           </div>
           <span className="hidden justify-self-end text-[10px] font-medium uppercase tracking-[0.3em] text-black/50 md:block" style={{ gridColumn: "10 / 13" }}>
-            scroll to cycle
+            scroll to explore
           </span>
 
           {/* title */}
           <div className="overflow-hidden" style={{ gridColumn: "1 / 9", gridRow: 2 }}>
-            <h2 className="font-display text-[10vw] font-light leading-[0.85]">Updates</h2>
+            <h2 className="font-display text-[10vw] font-light leading-[0.85]">Projects</h2>
           </div>
 
           {/* left small figure */}
